@@ -1,0 +1,16 @@
+
+/echo Hilite test
+/hilite -i -n testhilite -c yellow "Tomba"
+/receive Durand says 'Tomba rocks!'.
+
+/echo Script test
+/trigger -p 0 -f -n test1 -m script "(\w*) arrives from (\w*)" -> print "player: '%s', direction: '%s'" % (%1.upper(), %2)
+/receive Tomba arrives from east.
+
+/echo Replace test
+/trigger -p 0 -f -n test2 -m replace "^(\w*) attacks you!$" -> *** %{batclient.colorize(%0.upper(), "red")} ***
+/receive Tomba attacks you!
+
+/echo Send test
+/trigger -p 0 -f -n test3 -m send "(\w*) is dead, RIP" -> dig grave
+/receive Durand is dead, RIP

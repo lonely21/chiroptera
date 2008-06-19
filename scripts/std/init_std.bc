@@ -1,0 +1,7 @@
+# import these, so that trigger scripts can use them
+/eval import batclient
+
+/run basic
+/run triggers
+/run hilite
+/run bind
