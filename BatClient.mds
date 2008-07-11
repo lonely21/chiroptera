@@ -1,0 +1,20 @@
+<Combine name="BatClient" fileversion="2.0">
+  <Configurations active="Debug">
+    <Configuration name="Debug" ctype="CombineConfiguration">
+      <Entry build="True" name="BatClientBase" configuration="Debug" />
+      <Entry build="True" name="BatClientText" configuration="Debug" />
+    </Configuration>
+    <Configuration name="Release" ctype="CombineConfiguration">
+      <Entry build="True" name="BatClientBase" configuration="Release" />
+      <Entry build="True" name="BatClientText" configuration="Release" />
+    </Configuration>
+  </Configurations>
+  <StartMode startupentry="BatClientBase" single="True">
+    <Execute type="None" entry="BatClientBase" />
+    <Execute type="None" entry="BatClientText" />
+  </StartMode>
+  <Entries>
+    <Entry filename="BatClientBase/BatClientBase.mdp" />
+    <Entry filename="BatClientText/BatClientText.mdp" />
+  </Entries>
+</Combine>
