@@ -1,0 +1,20 @@
+<Project name="libbatclient" fileversion="2.0" language="C" ctype="CProject">
+  <Configurations active="Debug">
+    <Configuration name="Debug" SourceDirectory="." ctype="CProjectConfiguration">
+      <Output directory="bin/Debug" output="libbatclient" />
+      <Build debugmode="True" target="SharedLibrary" />
+      <Execution runwithwarnings="True" consolepause="True" />
+      <CodeGeneration WarningLevel="Normal" WarningsAsErrors="False" OptimizationLevel="0" ExtraCompilerArguments="" ExtraLinkerArguments="" DefineSymbols="DEBUG MONODEVELOP" ctype="CCompilationParameters" />
+    </Configuration>
+    <Configuration name="Release" ctype="CProjectConfiguration">
+      <Output directory="bin/Release" output="libbatclient" />
+      <Build debugmode="False" target="SharedLibrary" />
+      <Execution runwithwarnings="True" consolepause="True" />
+      <CodeGeneration WarningLevel="Normal" WarningsAsErrors="False" OptimizationLevel="3" ExtraCompilerArguments="" ExtraLinkerArguments="" DefineSymbols="MONODEVELOP" ctype="CCompilationParameters" />
+    </Configuration>
+  </Configurations>
+  <Contents>
+    <File name="readline-wrap.c" subtype="Code" buildaction="Compile" />
+  </Contents>
+  <compiler ctype="GccCompiler" />
+</Project>
