@@ -11,7 +11,7 @@
       <Entry build="True" name="libbatclient" configuration="Release" />
     </Configuration>
   </Configurations>
-  <StartMode startupentry="BatClientBase" single="True">
+  <StartMode startupentry="BatClientText" single="True">
     <Execute type="None" entry="BatClientBase" />
     <Execute type="None" entry="BatClientText" />
     <Execute type="None" entry="libbatclient" />

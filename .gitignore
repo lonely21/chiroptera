@@ -2,3 +2,7 @@
 *.usertasks
 *.pidb
 *.pc
+bin
+*.[oad]
+*~
+
