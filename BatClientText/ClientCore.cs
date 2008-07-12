@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using System.Threading;
 using BatMud.BatClientBase;
 using IronPython.Hosting;
 using IronPython.Runtime;
@@ -35,7 +36,7 @@ namespace BatMud.BatClientText
 		{
 			s_clientCore = this;
 
-			Ansi.SendAnsiInit();
+			//Ansi.SendAnsiInit();
 
 			m_synchronizedInvoke = new SynchronizedInvoke();
 
@@ -46,7 +47,6 @@ namespace BatMud.BatClientText
 			// Init console
 			m_textConsole = new TextConsole();
 			BatConsole.SetBatConsole(m_textConsole);
-			m_textConsole.Reset();
 			
 			// Initialize ironpython
 			IronPython.Compiler.Options.GenerateModulesAsSnippets = true;
@@ -84,7 +84,7 @@ namespace BatMud.BatClientText
 			// run init script
 
 			BatConsole.WriteLine("Using {0}", PythonEngine.VersionString);
-
+/*
 			m_pythonEngine.Import("site");
 
 			try
@@ -95,6 +95,7 @@ namespace BatMud.BatClientText
 			{
 				BatConsole.WriteError("Eval failed", e);
 			}
+			*/
 		}
 
 		void AddBuiltinCommands()
@@ -119,9 +120,84 @@ namespace BatMud.BatClientText
 			m_commandManager.AddCommand("co", ConnectCommandHandler, "", "");
 		}
 
+		delegate void SignalDelegate();
+		bool m_sigThreadStop = false;
+		
+		void SignalThread()
+		{
+			Dbg.WriteLine("Starting Signal Thread");
+			
+			UnixSignal sigint = new UnixSignal(Signum.SIGINT);
+			UnixSignal sigtstp = new UnixSignal(Signum.SIGTSTP);
+			UnixSignal sigwinch = new UnixSignal(Signum.SIGWINCH);
+
+			UnixSignal[] signals = { sigint, sigtstp, sigwinch };
+			
+			while(true)
+			{
+				// We need timeout to be able to stop this thread
+				int s = UnixSignal.WaitAny(signals, 200);
+
+				if(m_sigThreadStop)
+				{
+					Dbg.WriteLine("Stopping Signal Thread");
+					return;
+				}
+				
+				SignalDelegate del;
+				
+				if(s == 0)
+					del = HandleSigInt;
+				else if(s == 1)
+					del = HandleSigTstp;
+				else if(s == 2)
+					del = HandleSigWinch;
+				else
+					continue;
+				
+				m_synchronizedInvoke.BeginInvoke(del, null);
+				
+				signals[s].Reset();
+			}
+		}
+		
+		void HandleSigInt()
+		{
+			m_exit = true;
+			Dbg.WriteLine("SIGINT");
+			//sigint.Reset();
+		}
+
+		void HandleSigWinch()
+		{
+			int w, h;
+			TermInfo.GetSize(out w, out h);
+			Dbg.WriteLine("SIGWINCH {0},{1}", w, h);
+			//sigwinch.Reset();
+			
+			m_textConsole.Reset();
+			GNUReadLine.rl_resize_terminal();
+			GNUReadLine.rl_reset_line_state();
+		}
+		
+		void HandleSigTstp()
+		{
+			Dbg.WriteLine("SIGTSTP");
+			m_textConsole.RestoreNormal();
+			GNUReadLine.rl_cleanup_after_signal();
+			Stdlib.raise(Signum.SIGSTOP);
+			GNUReadLine.rl_reset_after_signal();
+			m_textConsole.Reset();
+			Dbg.WriteLine("cont");
+			//sigtstp.Reset();
+		}
+		
 		public void Run()
 		{
-			GNUReadLine.rl_callback_handler_install("> ", InputEvent);
+
+			Thread m_signalThread = new Thread(SignalThread);
+			m_signalThread.Start();
+			
 			
 			Pollfd[] fds = new Pollfd[2];
 			
@@ -146,7 +222,14 @@ namespace BatMud.BatClientText
 				{
 					if(fds[0].revents != 0)
 					{
-						GNUReadLine.rl_callback_read_char();
+						m_textConsole.ReadChars();
+						
+						string str;
+						while((str = m_textConsole.GetLine()) != null)
+						{
+							//m_textConsole.WriteLine("Tuli {0}", str);
+							HandleInput(str);
+						}
 					}
 					
 					if(fds[1].revents != 0)
@@ -157,7 +240,13 @@ namespace BatMud.BatClientText
 				}
 			}
 
-			GNUReadLine.rl_callback_handler_remove();
+			Dbg.WriteLine("Exiting");
+			
+			m_sigThreadStop = true;
+			if(m_signalThread.Join(1000) == false)
+				m_signalThread.Abort();
+			
+			m_textConsole.UnInit();
 		}
 
 		internal void DispatchEvents()
@@ -280,13 +369,6 @@ namespace BatMud.BatClientText
 			{
 				//m_mainWindow.PromptTextBox.PromptPassword = false;
 			}
-		}
-
-		static void InputEvent(string str)
-		{
-			if(str.Length > 0)
-				GNUReadLine.add_history(str);
-			s_clientCore.HandleInput(str);
 		}
 
 		public void HandleInput(string input)

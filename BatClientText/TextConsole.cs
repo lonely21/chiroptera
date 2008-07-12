@@ -12,97 +12,50 @@ namespace BatMud.BatClientText
 		static TextConsole s_console;
 
 		string m_prompt = "";
-
-		int m_lines = 25;
-		int m_columns = 80;
-		int m_editLines = 4;
-
-		bool m_visualMode = false;
 		
 		public TextConsole()
 		{
 			s_console = this;
-
-			GNUReadLine.rl_bind_key(12, ClearScreenHandler);
-
-			Stdlib.signal(Signum.SIGWINCH, SigWinchHandler);
-			//Stdlib.signal(Signum.SIGTSTP, SigStopHandler);
-			//Stdlib.signal(Signum.SIGCONT, SigContHandler);
+			
+			Terminal.Init();
 		}
 
+		public void Init()
+		{
+			Terminal.Init();
+		}
+		
+		public void UnInit()
+		{
+			Terminal.UnInit();
+		}
+		
 		public void Reset()
 		{
-			if(!m_visualMode)
-				return;
-
-			TermInfo.Init();
-
-			//			TermInfo.SetScrollRegion(-1, -1);
-					
-			m_lines = TermInfo.GetLines();
-			m_columns = TermInfo.GetColumns();
-
-			TermInfo.MoveCursor(m_lines - m_editLines - 1, 0);
-			Console.Write(new String('_', m_columns));
-
-			TermInfo.SetScrollRegion(m_lines - m_editLines, m_lines);
-			TermInfo.MoveCursor(m_lines - m_editLines, 0);
+			Terminal.Reset();
 		}
 
-		public static void RestoreNormal()
+		public void RestoreNormal()
 		{
-			if(!s_console.m_visualMode)
-				return;
-			
-			TermInfo.UnInit();
-		}
-
-		void SetOutputMode()
-		{
-			TermInfo.SaveCursor();
-			TermInfo.SetScrollRegion(0, m_lines - m_editLines - 2);
-			TermInfo.MoveCursor(m_lines - m_editLines - 2, 0);
-		}
-
-		void SetInputMode()
-		{
-			TermInfo.SetScrollRegion(m_lines - m_editLines, m_lines);
-			TermInfo.RestoreCursor();
-		}
-
-		static int ClearScreenHandler(int x, int keycode)
-		{
-			s_console.Reset();
-			GNUReadLine.rl_reset_line_state();
-			return 0;
+			Terminal.RestoreNormal();
 		}
 		
-		static void SigWinchHandler(int signal)
+		public void ReadChars()
 		{
-			s_console.Reset();
-			GNUReadLine.rl_resize_terminal();
-			GNUReadLine.rl_reset_line_state();
-		}
-
-		static void SigStopHandler(int signal)
-		{
-			Console.WriteLine("STOP");
-			//RestoreNormal();
+			Terminal.ReadInput();
 		}
 		
-		static void SigContHandler(int signal)
+		public string GetLine()
 		{
-			Console.WriteLine("CONT");
-			return;
-			s_console.Reset();
-			GNUReadLine.rl_resize_terminal();
-			GNUReadLine.rl_reset_line_state();
+			return Terminal.Pop();
 		}
 
 		#region IBatConsole Members
 		
 		public void WriteLine(string str)
 		{
+			Terminal.WriteLine(str);
+			/*
 			if(m_visualMode)
 				SetOutputMode();
 
@@ -129,6 +82,7 @@ namespace BatMud.BatClientText
 
 			if(m_visualMode)
 				SetInputMode();
+				*/
 		}
 
 		public void WriteLine(string format, params object[] args)
@@ -138,6 +92,10 @@ namespace BatMud.BatClientText
 
 		public void WriteLine(ColorMessage msg)
 		{
+			string str = msg.ToAnsiString();
+			Terminal.WriteLine(str);
+			/*
+			
 			if(m_visualMode)
 				SetOutputMode();
 			
@@ -158,10 +116,13 @@ namespace BatMud.BatClientText
 			
 			if(m_visualMode)
 				SetInputMode();
+				*/
 		}
 
 		public void WriteLineLow(string format, params object[] args)
 		{
+			Terminal.WriteLine(format, args);
+			/*
 			if (m_visualMode)
 				SetOutputMode();
 
@@ -186,6 +147,7 @@ namespace BatMud.BatClientText
 
 			if (m_visualMode)
 				SetInputMode();
+				*/
 		}
 		public string ReadLine()
 		{

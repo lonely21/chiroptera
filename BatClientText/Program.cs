@@ -10,20 +10,9 @@ namespace BatMud.BatClientText
 	{
 		static void Main()
 		{
-			Stdlib.signal(Signum.SIGINT, SigIntHandler);
-
 			ClientCore clientCore = new ClientCore();
 
 			clientCore.Run();
-
-			TextConsole.RestoreNormal();
-		}
-
-		static void SigIntHandler(int signal)
-		{
-			TextConsole.RestoreNormal();
-			
-			Stdlib.exit(Stdlib.EXIT_FAILURE);
 		}
 	}
 }

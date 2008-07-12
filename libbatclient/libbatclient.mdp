@@ -1,6 +1,9 @@
 <Project name="libbatclient" fileversion="2.0" language="C" ctype="CProject">
   <Configurations active="Debug">
     <Configuration name="Debug" SourceDirectory="." ctype="CProjectConfiguration">
+      <CustomCommands>
+        <Command type="AfterBuild" command="cp -f bin/Debug/libbatclient.so ../BatClientText/bin/Debug/" />
+      </CustomCommands>
       <Output directory="bin/Debug" output="libbatclient" />
       <Build debugmode="True" target="SharedLibrary" />
       <Execution runwithwarnings="True" consolepause="True" />

@@ -2,19 +2,22 @@ using System;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
 
-public class GNUReadLine
+public static class GNUReadLine
 {
+	public delegate void LineHandlerDelegate(IntPtr line);
+	
 	[DllImport("libreadline", CallingConvention = CallingConvention.Cdecl)]
 	extern static int rl_set_prompt(string str);
 
 	[DllImport("libreadline", CallingConvention = CallingConvention.Cdecl)]
-	extern static void stifle_history(int max);
+	public extern static void stifle_history(int max);
 
 	[DllImport("libreadline", CallingConvention = CallingConvention.Cdecl)]
 	public extern static void rl_redisplay();
-
-	public delegate void LineHandlerDelegate(string line);
 	
+	[DllImport("libreadline", CallingConvention = CallingConvention.Cdecl)]
+	public extern static void rl_forced_update_display();
+
 	[DllImport("libreadline", CallingConvention = CallingConvention.Cdecl)]
 	public extern static void rl_callback_handler_install(string prompt, LineHandlerDelegate handler);
 
@@ -47,12 +50,39 @@ public class GNUReadLine
 	[DllImport("libreadline", CallingConvention = CallingConvention.Cdecl)]
 	public extern static void rl_resize_terminal();
 	
-	static GNUReadLine()
-	{
-		stifle_history(100);
-		rl_set_signals();
-	}
+	[DllImport("libreadline", CallingConvention = CallingConvention.Cdecl)]
+	public extern static void rl_clear_signals();
 	
+	[DllImport("libreadline", CallingConvention = CallingConvention.Cdecl)]
+	public extern static void rl_reset_after_signal();
+	
+	[DllImport("libreadline", CallingConvention = CallingConvention.Cdecl)]
+	public extern static void rl_cleanup_after_signal();
+	
+	[DllImport("libreadline", CallingConvention = CallingConvention.Cdecl)]
+	public extern static void rl_clear_message();
+	
+	[DllImport("libreadline", CallingConvention = CallingConvention.Cdecl)]
+	public extern static void rl_on_new_line();
+	
+	[DllImport("libreadline", CallingConvention = CallingConvention.Cdecl)]
+	public extern static void rl_initialize();
+
+	[DllImport("libreadline", CallingConvention = CallingConvention.Cdecl)]
+	public extern static void rl_prep_terminal(int meta);
+	
+	[DllImport("libbatclient", CallingConvention = CallingConvention.Cdecl)]
+	public extern static void mono_rl_set_catch_signals(bool enable);
+	
+	[DllImport("libbatclient", CallingConvention = CallingConvention.Cdecl)]
+	public extern static bool mono_rl_get_window_size(out int width, out int height);
+
+	[DllImport("libbatclient", CallingConvention = CallingConvention.Cdecl)]
+	public extern static void mono_rl_save_and_clear();
+
+	[DllImport("libbatclient", CallingConvention = CallingConvention.Cdecl)]
+	public extern static void mono_rl_restore();
+
 	static public void SetPrompt(string prompt)
 	{
 		rl_set_prompt(prompt);
