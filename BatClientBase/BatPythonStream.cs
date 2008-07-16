@@ -77,7 +77,7 @@ namespace BatMud.BatClientBase
 				for (int i = 0; i < lines.Length - 1; i++)
 				{
 					string line = lines[i];
-					BatConsole.WriteLine("> " + line);
+					BatConsole.WriteLine("% " + line);
 				}
 
 				m_stringBuilder = new StringBuilder(lines[lines.Length - 1]);

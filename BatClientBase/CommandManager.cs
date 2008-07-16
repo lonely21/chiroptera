@@ -53,6 +53,11 @@ namespace BatMud.BatClientBase
         {
             m_commandMap.Remove(cmd);
         }
+		
+		public bool HasCommand(string cmd)
+		{
+			return m_commandMap.ContainsKey(cmd);
+		}
 
 		public string HandleInput(string input)
 		{
@@ -117,12 +122,17 @@ namespace BatMud.BatClientBase
 			{
 				BatConsole.WriteLine("Commands");
 				BatConsole.WriteLine("--------");
-				foreach (KeyValuePair<string, CommandData> kvp in m_commandMap)
+
+				string[] keys = new string[m_commandMap.Count];
+				m_commandMap.Keys.CopyTo(keys, 0);
+				Array.Sort<string>(keys);
+				
+				foreach (string key in keys)
 				{
-					if (kvp.Value.m_help != null)
-						BatConsole.WriteLine("{0} - {1}", kvp.Key, kvp.Value.m_help);
+					if (m_commandMap[key].m_help != null)
+						BatConsole.WriteLine("{0} - {1}", key, m_commandMap[key].m_help);
 					else
-						BatConsole.WriteLine("{0}", kvp.Key);
+						BatConsole.WriteLine("{0}", key);
 				}
 			}
 			else

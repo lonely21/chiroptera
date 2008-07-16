@@ -3,6 +3,16 @@
 import BatMud.BatClientBase
 import System.Drawing
 
+# Global helper variables
+
+Bat = BatMud.BatClientBase.PythonInterface
+Net = Bat.Network
+Console = Bat.Console
+CmdMgr = Bat.CommandManager
+KeyMgr = Bat.KeyManager
+HiliteMgr = Bat.HiliteManager
+TriggerMgr = Bat.TriggerManager
+
 def colorize(str, fg, bg=None):
 	if not isinstance(fg, System.Drawing.Color):
 		if fg != None:
@@ -20,26 +30,32 @@ def colorize(str, fg, bg=None):
 	return str
 
 def send(str):
-	BatMud.BatClientBase.PythonInterface.Network.SendLine(str)
+	Net.SendLine(str)
 	
 def write(str, *args):
-	BatMud.BatClientBase.PythonInterface.Console.WriteLine(str, *args)
+	Console.WriteLine(str, *args)
+
+def isconnected():
+	return Net.IsConnected
 	
 def receive(str):
-	BatMud.BatClientBase.PythonInterface.Network.ReceiveLine(str)
+	Net.ReceiveLine(str)
 
 def isdebug():
-	BatMud.BatClientBase.PythonInterface.IsDebug()
+	Bat.IsDebug()
 
 def run(file):
-	BatMud.BatClientBase.PythonInterface.RunScript(file)
+	Bat.RunScript(file)
 
 def addcommand(cmd, action, help, longhelp):
-	BatMud.BatClientBase.PythonInterface.CommandManager.AddCommand(cmd, action, help, longhelp)
+	if CmdMgr.HasCommand(cmd):
+		print "warning: overriding command '" + cmd + "'"
+		removecommand(cmd)
+	CmdMgr.AddCommand(cmd, action, help, longhelp)
 
 def removecommand(cmd):
-	BatMud.BatClientBase.PythonInterface.CommandManager.RemoveCommand(cmd)
+	CmdMgr.RemoveCommand(cmd)
 
 def getopts(input, optstring):
-	args, opts = BatMud.BatClientBase.PythonInterface.CommandManager.GetOpts(input, optstring)
+	args, opts = CmdMgr.GetOpts(input, optstring)
 	return (args, opts)

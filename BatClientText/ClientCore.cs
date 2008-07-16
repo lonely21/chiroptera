@@ -136,11 +136,10 @@ namespace BatMud.BatClientText
 "and the from <batclient dir>/std. Python scripts are ran in its own python environment, and batclient scripts " +
 "are executed in the main python environment.");
 
-			m_commandManager.AddCommand("py", null, "Enter/Exit python mode", // command handler is null, because this is just a help container
+			// command handler is null, because this is just a help container. the command is hardcoded.
+			m_commandManager.AddCommand("py", null, "Enter/Exit python mode", 
 "usage: /py\n\nEnters or exits python mode. When in python mode, all input is considered as python code and is executed " +
 "as if the code had been given with /eval command.");
-			
-			m_commandManager.AddCommand("co", ConnectCommandHandler, "", "");
 		}
 
 		delegate void SignalDelegate();
@@ -402,7 +401,7 @@ namespace BatMud.BatClientText
 
 				if (m_pythonMode)
 				{
-					BatConsole.WriteLine("Python mode enabled.");
+					BatConsole.WriteLine("Python mode enabled. Use /py to exit python mode.");
 					BatConsole.Prompt = "python> ";
 				}
 				else
@@ -433,16 +432,6 @@ namespace BatMud.BatClientText
 			}
 			else
 				BatConsole.WriteLine("Not connected.");
-		}
-
-		int ConnectCommandHandler(string args)
-		{
-			if (m_telnet.IsConnected)
-				m_telnet.Disconnect();
-			
-			m_telnet.Connect("bat.org", 23);
-
-			return 0;
 		}
 
 		int QuitCommandHandler(string input)

@@ -40,7 +40,6 @@ def listcmd(input):
 
 	return 0
 
-removecommand("list")
 addcommand("list", listcmd, "list triggers", "usage: /list\n\nLists all defined triggers. The listed fields are in order: " 
 "trigger ID, trigger priority, trigger flags (F - fallthrough, G - gag), trigger name, trigger pattern, trigger target action")
 
@@ -81,7 +80,6 @@ def deletecmd(input):
 
 	return 0
 
-removecommand("delete")
 addcommand("delete", deletecmd, "delete a trigger", "usage: /delete [-n] <trigger>\n\nDeletes a trigger with ID <trigger>, or if -n flag is given a trigger named <trigger>.")
 
 def triggercmd(input):
@@ -153,7 +151,6 @@ def triggercmd(input):
 	return 0
 	
 
-removecommand("trigger")
 addcommand("trigger", triggercmd, "define a new trigger", "usage: /trigger [options] <pattern> -> <action>\n\n"
 """Defines a new trigger. Options are:
 	-n <name>		Trigger name

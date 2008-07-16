@@ -41,8 +41,6 @@ def bindcmd(input):
 		if opt.Key == "a":
 			alt = True
 
-	km = BatMud.BatClientBase.PythonInterface.KeyManager
-
 	try:
 		key = System.Enum.Parse(System.Windows.Forms.Keys, args[0])
 	except Exception:
@@ -64,14 +62,13 @@ def bindcmd(input):
 		print "Unknown mode " + mode
 		return -1
 		
-	km.RemoveBinding(key)
+	KeyMgr.RemoveBinding(key)
 	binding = BatMud.BatClientBase.ScriptedKeyBinding(key, type, action, False)
-	km.AddBinding(binding)
+	KeyMgr.AddBinding(binding)
 
 	return 0
 	
 
-removecommand("bind")
 addcommand("bind", bindcmd, "bind a key",
 """usage: /bind [options] <key> -> <action>
 
@@ -110,8 +107,6 @@ def unbindcmd(input):
 		if opt.Key == "a":
 			alt = True
 
-	km = BatMud.BatClientBase.PythonInterface.KeyManager
-
 	try:
 		key = System.Enum.Parse(System.ConsoleKey, args[0])
 	except Exception:
@@ -126,12 +121,11 @@ def unbindcmd(input):
 	if alt:
 		mods |= System.ConsoleModifiers.Alt
 
-	km.UnbindKey(key, mods)
+	KeyMgr.UnbindKey(key, mods)
 
 	return 0
 	
 
-removecommand("unbind")
 addcommand("unbind", unbindcmd, "unbind a key",
 """usage: /unbind [options] <key>
 

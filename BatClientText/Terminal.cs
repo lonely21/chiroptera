@@ -19,7 +19,7 @@ public class Terminal
 
 	static int m_lines = 25;
 	static int m_columns = 80;
-	static int m_editLines = 4;
+	static int m_editLines = 30;
 
 	static string m_statusLine;
 
@@ -37,7 +37,7 @@ public class Terminal
 		
 		Reset();
 
-		GNUReadLine.rl_callback_handler_install("> ", InputHandler);
+		GNUReadLine.rl_callback_handler_install("", InputHandler);
 		
 		m_initialized = true;
 	}
@@ -199,8 +199,13 @@ public class Terminal
 			SetOutputMode();
 
 		string str = String.Format(format, args);
+		
+		const char ESC = '\x1b';
+		string estr = str.Replace(ESC.ToString(), "<esc>"); 
 
-		Dbg.WriteLine("Output: '{0}'", str);
+		str = estr;		
+		
+		Dbg.WriteLine("Output: '{0}'", estr);
 
 		if(m_visualMode)
 		{

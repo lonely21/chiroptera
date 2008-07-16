@@ -46,12 +46,10 @@ def hilitecmd(input):
 		if opt.Key == "i":
 			ignorecase = True
 
-	hm = BatMud.BatClientBase.PythonInterface.HiliteManager
 	hilite = BatMud.BatClientBase.Hilite(args[0], ignorecase, color, System.Drawing.Color.Empty, fullline)
-	hm.AddHilite(hilite)
+	HiliteMgr.AddHilite(hilite)
 	return 0
 	
-removecommand("hilite")
 addcommand("hilite", hilitecmd, "hilite a pattern",
 """usage: /hilite [-c <color>] [-n name] [-i] [-f] <pattern>
 
@@ -62,11 +60,12 @@ Hilites pattern with specified color. Options:
 	-i				Ignore case
 """)
 
-testmode = 0
+testmode = 1
 if testmode and BatMud.BatClientBase.PythonInterface.IsDebug():
 	from batclient import *
 	
-	hilitecmd("-c yellow \"Tomba\"")
+	hilitecmd("kiki")
+	hilitecmd("-c yellow Tomba")
 
 	receive("You unzip your tomba kiki kuu and mumbku")
 	receive("You unzip your zipper and mumb")

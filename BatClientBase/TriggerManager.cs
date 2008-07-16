@@ -88,7 +88,8 @@ namespace BatMud.BatClientBase
 				m_subst = new TriggerManager.TriggerSubst(m_script);
 
 			string str = m_subst.Replace(msg.Text, match);
-			PythonInterface.Network.SendLine(str);
+			if(PythonInterface.Network.IsConnected)
+				PythonInterface.Network.SendLine(str);
 			return false;
 		}
 

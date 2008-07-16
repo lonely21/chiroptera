@@ -22,6 +22,7 @@ namespace BatMud.BatClientText
 		
 		static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
 		{
+			Dbg.WriteLine(e.ExceptionObject.ToString());
 			Terminal.UnInit();
 			Console.WriteLine(e.ExceptionObject);
 		}
