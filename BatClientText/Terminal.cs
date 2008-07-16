@@ -24,6 +24,8 @@ public class Terminal
 	static string m_statusLine;
 
 	static bool m_visualMode = true;
+
+	static bool m_initialized = false;
 	
 	public static void Init()
 	{
@@ -36,13 +38,19 @@ public class Terminal
 		Reset();
 
 		GNUReadLine.rl_callback_handler_install("> ", InputHandler);
+		
+		m_initialized = true;
 	}
 	
 	public static void UnInit()
 	{
-		GNUReadLine.rl_callback_handler_remove();
-		if(m_visualMode)
-			TermInfo.UnInit();
+		if(m_initialized)
+		{
+			GNUReadLine.rl_callback_handler_remove();
+			if(m_visualMode)
+				TermInfo.UnInit();
+			m_initialized = false;
+		}
 	}
 
 	public static void Reset()

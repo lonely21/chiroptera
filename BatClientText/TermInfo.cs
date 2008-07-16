@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
+using BatMud.BatClientBase;
 
 public static class TermInfo
 {
@@ -49,7 +50,7 @@ public static class TermInfo
 	{
 		if(GNUReadLine.mono_rl_get_window_size(out width, out height) == false)
 		{
-			Console.WriteLine("Failed to get win size");
+			BatConsole.WriteLine("Failed to get win size");
 			return false;
 		}
 		else

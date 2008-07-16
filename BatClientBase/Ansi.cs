@@ -64,7 +64,8 @@ namespace BatMud.BatClientBase
 
 		public static void SendAnsiInit()
 		{
-			Console.WriteLine("\x1b[{0};{1}m", 30 + DefaultFgColor, 40 + DefaultBgColor);
+			throw new Exception("kala");
+			//Console.WriteLine("\x1b[{0};{1}m", 30 + DefaultFgColor, 40 + DefaultBgColor);
 		}
 
 		public static Color AnsiColorToColor(AnsiColor ansiColor, bool highIntensity)

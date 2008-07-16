@@ -92,8 +92,9 @@ namespace BatMud.BatClientText
 			// run init script
 
 			BatConsole.WriteLine("Using {0}", PythonEngine.VersionString);
-			
-			try			{
+						
+			try
+			{
 #if DEBUG
 				PythonInterface.RunScript(Path.GetFullPath("../../../scripts/std/init_std.bc"));
 #else
@@ -452,6 +453,7 @@ namespace BatMud.BatClientText
 
 		int EvalCommandHandler(string input)
 		{
+
 			if (input.Length == 0)
 				return -1;
 
