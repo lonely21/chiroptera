@@ -95,8 +95,7 @@ namespace BatMud.BatClientWindows
 			PythonInterface.Initialize(m_baseServicesDispatcher, m_triggerManager, m_commandManager, this,
 				this, m_pythonEngine, m_keyManager, m_hiliteManager);
 
-			try
-			{
+			try			{
 #if DEBUG
 				PythonInterface.RunScript(Path.GetFullPath("../../../scripts/std/init_std.bc"));
 #else

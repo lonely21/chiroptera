@@ -43,7 +43,6 @@ namespace BatMud.BatClientText
 			// Services
 			m_baseServicesDispatcher = new BaseServicesDispatcher();
 
-
 			// Init console
 			m_textConsole = new TextConsole();
 			BatConsole.SetBatConsole(m_textConsole);
@@ -56,8 +55,17 @@ namespace BatMud.BatClientText
 			m_pythonEngine.SetStandardOutput(s);
 			m_pythonEngine.SetStandardError(s);
 			m_pythonEngine.SetStandardInput(s);
-			m_pythonEngine.AddToPath(Environment.CurrentDirectory);
-
+			//m_pythonEngine.AddToPath(Environment.CurrentDirectory);
+			//m_pythonEngine.AddToPath(Application.StartupPath + "/lib");
+#if DEBUG
+			m_pythonEngine.AddToPath(@"../../../scripts/lib");
+#endif
+			m_pythonEngine.LoadAssembly(typeof(TriggerManager).Assembly); // load BatClientBase
+			m_pythonEngine.LoadAssembly(typeof(System.Drawing.Bitmap).Assembly); // load System.Drawing
+			m_pythonEngine.LoadAssembly(typeof(System.Windows.Forms.Keys).Assembly); // load System.Windows.Forms
+			
+			
+			
 			// Network
 			m_telnet = new Telnet();
 			m_telnet.connectEvent += new Telnet.ConnectDelegate(_ConnectEvent);
@@ -84,6 +92,20 @@ namespace BatMud.BatClientText
 			// run init script
 
 			BatConsole.WriteLine("Using {0}", PythonEngine.VersionString);
+			
+			try			{
+#if DEBUG
+				PythonInterface.RunScript(Path.GetFullPath("../../../scripts/std/init_std.bc"));
+#else
+				PythonInterface.RunScript(Path.Combine(Environment.CurrentDirectory, "std/init_std.bc"));
+#endif
+			}
+			catch (Exception e)
+			{
+				BatConsole.WriteError("Error running init_std.bc", e);
+			}
+			
+			
 /*
 			m_pythonEngine.Import("site");
 
