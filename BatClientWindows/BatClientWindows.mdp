@@ -1,0 +1,75 @@
+<Project name="BatClientWindows" fileversion="2.0" language="C#" clr-version="Net_2_0" ctype="DotNetProject">
+  <Configurations active="Debug">
+    <Configuration name="Debug" ctype="DotNetProjectConfiguration">
+      <Output directory="bin/Debug" assemblyKeyFile="." assembly="BatClientWindows" />
+      <Build debugmode="True" target="Exe" />
+      <Execution runwithwarnings="True" consolepause="True" runtime="MsNet" clr-version="Net_2_0" />
+      <CodeGeneration compiler="Mcs" warninglevel="4" nowarn="169" optimize="True" unsafecodeallowed="False" generateoverflowchecks="True" mainclass="" definesymbols="DEBUG" generatexmldocumentation="False" win32Icon="." ctype="CSharpCompilerParameters" />
+    </Configuration>
+    <Configuration name="Release" ctype="DotNetProjectConfiguration">
+      <Output directory="bin/Release" assembly="BatClientWindows" />
+      <Build debugmode="False" target="Exe" />
+      <Execution runwithwarnings="True" consolepause="True" runtime="MsNet" clr-version="Net_2_0" />
+      <CodeGeneration compiler="Mcs" warninglevel="4" optimize="True" unsafecodeallowed="False" generateoverflowchecks="True" mainclass="" generatexmldocumentation="False" win32Icon="." ctype="CSharpCompilerParameters" />
+    </Configuration>
+  </Configurations>
+  <Contents>
+    <File name="AboutDialog.cs" subtype="Code" buildaction="Compile" />
+    <File name="AboutDialog.Designer.cs" subtype="Code" buildaction="Compile" />
+    <File name="AboutDialog.resx" subtype="Code" buildaction="Nothing" />
+    <File name="app.config" subtype="Code" buildaction="Nothing" />
+    <File name="Bat.ico" subtype="Code" buildaction="Nothing" />
+    <File name="BatClientWindows.csproj" subtype="Code" buildaction="Nothing" />
+    <File name="BatClientWindows.mdp" subtype="Code" buildaction="Nothing" />
+    <File name="ClientCore.cs" subtype="Code" buildaction="Compile" />
+    <File name="ErrorDialog.cs" subtype="Code" buildaction="Compile" />
+    <File name="ErrorDialog.Designer.cs" subtype="Code" buildaction="Compile" />
+    <File name="ErrorDialog.resx" subtype="Code" buildaction="Nothing" />
+    <File name="Help.html" subtype="Code" buildaction="Nothing" />
+    <File name="HiliteForm.cs" subtype="Code" buildaction="Compile" />
+    <File name="HiliteForm.Designer.cs" subtype="Code" buildaction="Compile" />
+    <File name="HiliteForm.resx" subtype="Code" buildaction="Nothing" />
+    <File name="HistoryTextBox.cs" subtype="Code" buildaction="Compile" />
+    <File name="KeyBindForm.cs" subtype="Code" buildaction="Compile" />
+    <File name="KeyBindForm.Designer.cs" subtype="Code" buildaction="Compile" />
+    <File name="KeyBindForm.resx" subtype="Code" buildaction="Nothing" />
+    <File name="MainWindow.cs" subtype="Code" buildaction="Compile" />
+    <File name="MainWindow.Designer.cs" subtype="Code" buildaction="Compile" />
+    <File name="MainWindow.resx" subtype="Code" buildaction="Nothing" />
+    <File name="Paragraph.cs" subtype="Code" buildaction="Compile" />
+    <File name="ParagraphContainer.cs" subtype="Code" buildaction="Compile" />
+    <File name="Program.cs" subtype="Code" buildaction="Compile" />
+    <File name="PromptTextBox.cs" subtype="Code" buildaction="Compile" />
+    <File name="PromptTextBox.designer.cs" subtype="Code" buildaction="Compile" />
+    <File name="PromptTextBox.resx" subtype="Code" buildaction="Nothing" />
+    <File name="PropertyForm.cs" subtype="Code" buildaction="Compile" />
+    <File name="PropertyForm.Designer.cs" subtype="Code" buildaction="Compile" />
+    <File name="PropertyForm.resx" subtype="Code" buildaction="Nothing" />
+    <File name="Settings.cs" subtype="Code" buildaction="Compile" />
+    <File name="SplashForm.cs" subtype="Code" buildaction="Compile" />
+    <File name="SplashForm.Designer.cs" subtype="Code" buildaction="Compile" />
+    <File name="SplashForm.resx" subtype="Code" buildaction="Nothing" />
+    <File name="TextView.cs" subtype="Code" buildaction="Compile" />
+    <File name="TextView.designer.cs" subtype="Code" buildaction="Compile" />
+    <File name="TextView.resx" subtype="Code" buildaction="Nothing" />
+    <File name="TriggerForm.cs" subtype="Code" buildaction="Compile" />
+    <File name="TriggerForm.Designer.cs" subtype="Code" buildaction="Compile" />
+    <File name="TriggerForm.resx" subtype="Code" buildaction="Nothing" />
+    <File name="WindowsHook.cs" subtype="Code" buildaction="Compile" />
+    <File name="Properties/AssemblyInfo.cs" subtype="Code" buildaction="Compile" />
+    <File name="Properties/Resources.Designer.cs" subtype="Code" buildaction="Compile" />
+    <File name="Properties/Resources.resx" subtype="Code" buildaction="Nothing" />
+    <File name="Properties/Settings.Designer.cs" subtype="Code" buildaction="Compile" />
+    <File name="Properties/Settings.settings" subtype="Code" buildaction="Nothing" />
+  </Contents>
+  <References>
+    <ProjectReference type="Gac" localcopy="True" refto="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+    <ProjectReference type="Gac" localcopy="True" refto="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <ProjectReference type="Gac" localcopy="True" refto="System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+    <ProjectReference type="Gac" localcopy="True" refto="System.Data, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+    <ProjectReference type="Assembly" localcopy="True" refto="../IronPython/IronMath.dll" />
+    <ProjectReference type="Assembly" localcopy="True" refto="../IronPython/IronPython.dll" />
+    <ProjectReference type="Project" localcopy="True" refto="BatClientBase" />
+    <ProjectReference type="Gac" localcopy="True" refto="System.Xml, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  </References>
+</Project>
