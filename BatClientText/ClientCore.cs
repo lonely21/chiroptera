@@ -158,7 +158,7 @@ namespace BatMud.BatClientText
 			while(true)
 			{
 				// We need timeout to be able to stop this thread
-				int s = UnixSignal.WaitAny(signals, 200);
+				int s = UnixSignal.WaitAny(signals, 100);
 
 				if(m_sigThreadStop)
 				{
@@ -342,14 +342,23 @@ namespace BatMud.BatClientText
 			m_synchronizedInvoke.BeginInvoke(new Telnet.ReceiveDelegate(ReceiveEvent), new object[] { data });
 		}
 
+		Ansi.AnsiColor m_currentFgColor = Ansi.AnsiColor.None;
+		Ansi.AnsiColor m_currentBgColor = Ansi.AnsiColor.None;
+		Ansi.AnsiStyle m_currentAnsiStyle;
+		
 		void ReceiveEvent(string data)
 		{
-			ColorMessage colorMsg = new ColorMessage(data);
+			ColorMessage colorMsg = Ansi.ParseAnsi(data, ref m_currentFgColor, ref m_currentBgColor, ref m_currentAnsiStyle);
 
+			//BatConsole.WriteLine("received {0}", data);
+			//BatConsole.WriteLine("colormsg {0}", colorMsg.ToDebugString());
+			
 			colorMsg = m_baseServicesDispatcher.DispatchReceiveColorMessage(colorMsg);
 
 			if (colorMsg == null)
 				return;
+
+			//BatConsole.WriteLine("procesmsg {0}", colorMsg.ToDebugString());
 
 			BatConsole.WriteLine(colorMsg);
 		}

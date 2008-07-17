@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 
@@ -9,25 +8,33 @@ namespace BatMud.BatClientBase
 {
 	public class Hilite : Trigger
 	{
-		Color m_fgColor;
-		Color m_bgColor;
+		TextStyle m_style;
 		bool m_hiliteLine;
-
+/*
 		public Hilite() : base("", null, null, null, null, 0, false, false, false)
 		{
 			base.Action = HiliteCallback;
 		}
-
+*/
 		public Hilite(string pattern, bool ignoreCase, Color fgColor, Color bgColor, bool hiliteLine)
+			: this(pattern, ignoreCase, new TextStyle(fgColor, bgColor), hiliteLine)
+		{
+		}
+
+		public Hilite(string pattern, bool ignoreCase, TextStyle style, bool hiliteLine)
 			: base(pattern, null, null, null, null, 1, true, false, ignoreCase)
 		{
 			base.Action = HiliteCallback;
 
-			m_fgColor = fgColor;
-			m_bgColor = bgColor;
+			m_style = style;
 			m_hiliteLine = hiliteLine;
 		}
 
+		public TextStyle Style
+		{
+			get { return m_style; }
+		}
+		/*
 		[XmlIgnore()]
 		public Color FgColor
 		{
@@ -38,8 +45,8 @@ namespace BatMud.BatClientBase
 		[XmlElement("FgColor")]
 		public string XmlFgColor
 		{
-			get { return System.Drawing.ColorTranslator.ToHtml(m_fgColor); }
-			set { m_fgColor = System.Drawing.ColorTranslator.FromHtml(value); }
+			get { return m_fgColor.ToHtml(); }
+			set { m_fgColor = Color.FromHtml(value); }
 		}
 
 		[XmlIgnore()]
@@ -52,10 +59,10 @@ namespace BatMud.BatClientBase
 		[XmlElement("BgColor")]
 		public string XmlBgColor
 		{
-			get { return System.Drawing.ColorTranslator.ToHtml(m_bgColor); }
-			set { m_bgColor = System.Drawing.ColorTranslator.FromHtml(value); }
+			get { return m_bgColor.ToHtml(); }
+			set { m_bgColor = Color.FromHtml(value); }
 		}
-
+*/
 		public bool HiliteLine
 		{
 			set { m_hiliteLine = value; }
@@ -66,13 +73,14 @@ namespace BatMud.BatClientBase
 		{
 			if (m_hiliteLine)
 			{
-				msg.SetText(ControlCodes.ColorizeString(msg.Text, m_fgColor, m_bgColor));
+				msg.Colorize(0, msg.Length, m_style);
+				//msg.SetText(ControlCodes.ColorizeString(msg.Text, m_fgColor, m_bgColor));
 			}
 			else
 			{
 				while (match.Success)
 				{
-					msg.Colorize(match.Index, match.Length, m_fgColor, m_bgColor);
+					msg.Colorize(match.Index, match.Length, m_style);
 					match = match.NextMatch();
 				}
 			}

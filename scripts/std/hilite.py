@@ -1,5 +1,4 @@
 import BatMud.BatClientBase
-import System.Drawing
 from batclient import *
 
 def hiliteaction(msg, match, data):
@@ -9,15 +8,15 @@ def hiliteaction(msg, match, data):
 		msg.SetText(colorize(msg.Text, fg))
 	else:
 		while match.Success:
-			msg.Colorize(match.Index, match.Length, fg, System.Drawing.Color.Empty)
+			msg.Colorize(match.Index, match.Length, fg, BatMud.BatClientBase.Color.Empty)
 			match = match.NextMatch()
 
 def hilitecmd(input):
 	def usage():
-		print "usage: /hilite [-c <color>] [-n name] [-i] [-f] <pattern>"
+		print "usage: /hilite [-c <color>] [-b <color>] [-n name] [-i] [-f] <pattern>"
 	
 	try:
-		args, opts = getopts(input, "n:c:fi")
+		args, opts = getopts(input, "n:c:b:fi")
 	except Exception, err:
 		print err
 		usage()
@@ -27,7 +26,9 @@ def hilitecmd(input):
 		usage()
 		return -1
 	
-	color = System.Drawing.Color.White
+	C = BatMud.BatClientBase.Color
+	color = C.Empty
+	bgcolor = C.Empty
 	fullline = False
 	ignorecase = True
 	name = None
@@ -37,7 +38,13 @@ def hilitecmd(input):
 			name = opt.Value
 		if opt.Key == "c":
 			try:
-				color = System.Drawing.ColorTranslator.FromHtml(opt.Value)
+				color = C.FromHtml(opt.Value)
+			except:
+				print "Error parsing color", opt.Value
+				return				
+		if opt.Key == "b":
+			try:
+				bgcolor = C.FromHtml(opt.Value)
 			except:
 				print "Error parsing color", opt.Value
 				return				
@@ -46,28 +53,40 @@ def hilitecmd(input):
 		if opt.Key == "i":
 			ignorecase = True
 
-	hilite = BatMud.BatClientBase.Hilite(args[0], ignorecase, color, System.Drawing.Color.Empty, fullline)
+	if color.IsEmpty and bgcolor.IsEmpty:
+		style = BatMud.BatClientBase.TextStyle(BatMud.BatClientBase.TextStyleFlags.HighIntensity)
+		hilite = BatMud.BatClientBase.Hilite(args[0], ignorecase, style, fullline)
+	else:
+		hilite = BatMud.BatClientBase.Hilite(args[0], ignorecase, color, bgcolor, fullline)
 	HiliteMgr.AddHilite(hilite)
 	return 0
 	
 addcommand("hilite", hilitecmd, "hilite a pattern",
-"""usage: /hilite [-c <color>] [-n name] [-i] [-f] <pattern>
+"""usage: /hilite [-c <color>] [-b <color>] [-n name] [-i] [-f] <pattern>
 
 Hilites pattern with specified color. Options:
-	-n <name>		Name
-	-c <color>		Hilite color
-	-f				Hilite the whole line insted of just the pattern
-	-i				Ignore case
+	-n <name>               Name
+	-c <color>              Text color
+	-b <color>              Background color
+	-f                      Hilite the whole line insted of just the pattern
+	-i                      Ignore case
 """)
 
 testmode = 1
 if testmode and BatMud.BatClientBase.PythonInterface.IsDebug():
 	from batclient import *
+
+	#write("\x1b[38;5;41mkala\x1b[0mkissa")
+	#receive("\x1b[38;5;41mkala\x1b[0mkissa")
+
+	#receive(create256())
 	
 	hilitecmd("kiki")
+	hilitecmd("-c green youro")
 	hilitecmd("-c yellow Tomba")
 
 	receive("You unzip your tomba kiki kuu and mumbku")
 	receive("You unzip your zipper and mumb")
 	receive("You unzip youro huku'")
 	receive("You unzip tomba zipper tomba mumble 'kaakaa tomba kuu mopo huku'")
+

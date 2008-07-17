@@ -22,13 +22,14 @@
     <File name="Collections.cs" subtype="Code" buildaction="Compile" />
     <File name="ColorMessage.cs" subtype="Code" buildaction="Compile" />
     <File name="CommandManager.cs" subtype="Code" buildaction="Compile" />
-    <File name="ControlCodes.cs" subtype="Code" buildaction="Compile" />
     <File name="HiliteManager.cs" subtype="Code" buildaction="Compile" />
     <File name="INetwork.cs" subtype="Code" buildaction="Compile" />
     <File name="KeyManager.cs" subtype="Code" buildaction="Compile" />
     <File name="PythonInterface.cs" subtype="Code" buildaction="Compile" />
     <File name="Telnet.cs" subtype="Code" buildaction="Compile" />
     <File name="TriggerManager.cs" subtype="Code" buildaction="Compile" />
+    <File name="Color.cs" subtype="Code" buildaction="Compile" />
+    <File name="TextStyle.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="System.Xml, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />

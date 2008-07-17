@@ -18,10 +18,10 @@ public static class TermInfo
 	
 	static bool m_initialized = false;
 
-	static public void Init()
+	static public void Init(bool fullScreen)
 	{
 		if(m_initialized == true)
-			UnInit();
+			UnInit(fullScreen);
 
 		int ret = setupterm(null, 1, IntPtr.Zero);
 
@@ -30,13 +30,15 @@ public static class TermInfo
 			throw new Exception("Terminfo failed to initialize.");
 		}
 
-		Console.Write(TGetStr("smcup"));
+		if(fullScreen)
+			Console.Write(TGetStr("smcup"));
 		Console.Write(TGetStr("clear"));
 	}
 
-	static public void UnInit()
+	static public void UnInit(bool fullScreen)
 	{
-		Console.Write(TGetStr("rmcup"));
+		if(fullScreen)
+			Console.Write(TGetStr("rmcup"));
 		Console.Write(TGetStr("rs1"));
 		m_initialized = false;
 	}

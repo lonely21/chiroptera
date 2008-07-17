@@ -93,6 +93,13 @@ namespace BatMud.BatClientText
 		public void WriteLine(ColorMessage msg)
 		{
 			string str = msg.ToAnsiString();
+			
+			const char ESC = '\x1b';
+			string estr = str.Replace(ESC.ToString(), "<esc>"); 
+
+			Terminal.WriteLine("dbg: " + msg.ToDebugString());
+			Terminal.WriteLine("esc: " + estr);
+			
 			Terminal.WriteLine(str);
 			/*
 			

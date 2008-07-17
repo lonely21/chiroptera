@@ -14,17 +14,18 @@ HiliteMgr = Bat.HiliteManager
 TriggerMgr = Bat.TriggerManager
 
 def colorize(str, fg, bg=None):
-	if not isinstance(fg, System.Drawing.Color):
+	C = BatMud.BatClientBase.Color
+	if not isinstance(fg, C):
 		if fg != None:
-			fg = System.Drawing.ColorTranslator.FromHtml(fg)
+			fg = C.FromHtml(fg)
 		else:
-			fg = System.Drawing.Color.Empty
+			fg = C.Empty
 		
-	if not isinstance(bg, System.Drawing.Color):
+	if not isinstance(bg, C):
 		if bg != None:
-			bg = System.Drawing.ColorTranslator.FromHtml(bg)
+			bg = C.FromHtml(bg)
 		else:
-			bg = System.Drawing.Color.Empty
+			bg = C.Empty
 		
 	str = BatMud.BatClientBase.ControlCodes.ColorizeString(str, fg, bg)
 	return str

@@ -13,6 +13,50 @@ using System.Drawing;
  * TODO: control codes spanning multiple lines do not work
  */
 
+/*
+  Set Attribute Mode	<ESC>[{attr1};...;{attrn}m
+
+    * Sets multiple display attribute settings. The following lists standard attributes:
+
+      0	Reset all attributes
+      1	Bright
+      2	Dim
+      3 Italics
+      4	Underscore	
+      5	Blink
+      7	Reverse
+      8	Hidden
+      9 Strikethrough
+      22 Bold off
+      23 Italics off
+      24 Underline off
+      27 Inverse off
+      29 Strikethrough off
+
+      	Foreground Colours
+      30	Black
+      31	Red
+      32	Green
+      33	Yellow
+      34	Blue
+      35	Magenta
+      36	Cyan
+      37	White
+      39	Default
+
+      	Background Colours
+      40	Black
+      41	Red
+      42	Green
+      43	Yellow
+      44	Blue
+      45	Magenta
+      46	Cyan
+      47	White
+      49	Default
+*/
+
+
 namespace BatMud.BatClientBase
 {
 	public class Ansi
@@ -27,15 +71,17 @@ namespace BatMud.BatClientBase
 			Blue    = 4,
 			Purple  = 5,
 			Cyan    = 6,
-			White   = 7
+			White   = 7,
+			Default	= 9
 		}
 
 		[Flags]
 		public enum AnsiStyle
 		{
-			None = 0x00,
-			HighIntensity = 0x01,
-			Inverse = 0x02
+			None = 0,
+			Default = 1,
+			HighIntensity = 2,
+			Inverse = 3
 		}
 
 		static Color[] m_ansiColorArray = new Color[] { 
@@ -52,50 +98,37 @@ namespace BatMud.BatClientBase
 			Color.FromArgb(255, 255, 255) 
 		};
 
-		public static AnsiColor DefaultFgColor
+		public static Color AnsiColor8ToColor(int color)
 		{
-			get { return Ansi.AnsiColor.White; }
-		}
-
-		public static AnsiColor DefaultBgColor
-		{
-			get { return Ansi.AnsiColor.Black; }
-		}
-
-		public static void SendAnsiInit()
-		{
-			throw new Exception("kala");
-			//Console.WriteLine("\x1b[{0};{1}m", 30 + DefaultFgColor, 40 + DefaultBgColor);
-		}
-
-		public static Color AnsiColorToColor(AnsiColor ansiColor, bool highIntensity)
-		{
-			switch (ansiColor)
+			bool highIntensity = false; // xxx
+			switch (color)
 			{
-				case AnsiColor.None:
+				case -1:
 					return Color.Empty;
-				case AnsiColor.Black:
+				case 9:
+					return Color.Default;				
+				case 0:
 					return highIntensity ? m_ansiBoldColorArray[0] : m_ansiColorArray[0];
-				case AnsiColor.Red:
+				case 1:
 					return highIntensity ? m_ansiBoldColorArray[1] : m_ansiColorArray[1];
-				case AnsiColor.Green:
+				case 2:
 					return highIntensity ? m_ansiBoldColorArray[2] : m_ansiColorArray[2];
-				case AnsiColor.Yellow:
+				case 3:
 					return highIntensity ? m_ansiBoldColorArray[3] : m_ansiColorArray[3];
-				case AnsiColor.Blue:
+				case 4:
 					return highIntensity ? m_ansiBoldColorArray[4] : m_ansiColorArray[4];
-				case AnsiColor.Purple:
+				case 5:
 					return highIntensity ? m_ansiBoldColorArray[5] : m_ansiColorArray[5];
-				case AnsiColor.Cyan:
+				case 6:
 					return highIntensity ? m_ansiBoldColorArray[6] : m_ansiColorArray[6];
-				case AnsiColor.White:
+				case 7:
 					return highIntensity ? m_ansiBoldColorArray[7] : m_ansiColorArray[7];
 				default:
 					throw new Exception("rikki");
 			}
 		}
 
-		public static AnsiColor ColorToAnsiColor(Color color, out bool highIntensity)
+		public static int ColorToAnsiColor8(Color color, out bool highIntensity)
 		{
 			int bestIdx = -1;
 			int bestDiff = Int32.MaxValue;
@@ -129,32 +162,86 @@ namespace BatMud.BatClientBase
 				}
 			}
 
-			return NumberToAnsiColor(bestIdx);
+			return bestIdx;
 		}
 
-		public static AnsiColor NumberToAnsiColor(int colorNum)
+		static byte[] valuerange = { 0x00, 0x5F, 0x87, 0xAF, 0xD7, 0xFF };
+
+		/*
+		 * colors 16-231 are a 6x6x6 color cube
+		 * colors 232-255 are a grayscale ramp, intentionally leaving out black and white
+		 */
+
+		static Color AnsiColor256ToColor(int color)
 		{
-			switch (colorNum)
+			Color c;
+			
+			if(color < 16)
 			{
-				case 0:
-					return AnsiColor.Black;
-				case 1:
-					return AnsiColor.Red;
-				case 2:
-					return AnsiColor.Green;
-				case 3:
-					return AnsiColor.Yellow;
-				case 4:
-					return AnsiColor.Blue;
-				case 5:
-					return AnsiColor.Purple;
-				case 6:
-					return AnsiColor.Cyan;
-				case 7:
-					return AnsiColor.White;
-				default:
-					throw new Exception("Väärä väri");
+				// 16 basic colors
+				if(color < 8)
+					c = m_ansiColorArray[color];
+				else
+					c = m_ansiBoldColorArray[color - 8];
 			}
+			else if(color < 232)
+			{
+				// color cube color
+				color -= 16;
+				int r = valuerange[(color/36) % 6];
+				int g = valuerange[(color/6) % 6];
+				int b = valuerange[color % 6];
+				c = new Color(r, g, b);
+			}
+			else if(color < 256)
+			{
+				// gray tone
+				int g = 8 + (color-232) * 10;
+				c = new Color(g, g, g);
+			}
+			else
+				throw new Exception("illegal 256 color code");
+			
+			return c;
+		}
+
+		static byte[,] colortable = new byte[256,3];
+		
+		static Ansi()
+		{
+			int c;
+			
+			for(c = 0; c < 256; c++)
+			{
+				Color color = AnsiColor256ToColor(c);
+				colortable[c,0] = (byte)color.R;
+				colortable[c,1] = (byte)color.G;
+				colortable[c,2] = (byte)color.B;
+				//BatConsole.WriteLineLow("{0}: {1}", c, color);
+			}
+		}
+		
+		public static int ColorToAnsiColor256(Color color)
+		{
+			int c, best_match=0;
+			double d, smallest_distance;
+
+			smallest_distance = 10000000000.0;
+
+			for(c = 16; c < 256; c++)
+			{
+				d = Math.Pow(colortable[c,0] - color.R, 2.0) + 
+					Math.Pow(colortable[c,1] - color.G, 2.0) + 
+						Math.Pow(colortable[c,2] - color.B, 2.0);
+				
+				if(d < smallest_distance)
+				{
+					smallest_distance = d;
+					best_match = c;
+				}
+			}
+			
+			return best_match;
 		}
 
 		public static ColorMessage ParseAnsi(string text,
@@ -168,14 +255,14 @@ namespace BatMud.BatClientBase
 			int pos = 0;
 			int oldPos = 0;
 
-			AnsiColor fgColor = currentFgColor;
-			AnsiColor bgColor = currentBgColor;
-			AnsiStyle ansiStyle = currentAnsiStyle;
+			Color fgColor = Color.Empty;
+			Color bgColor = Color.Empty;
+			TextStyleFlags flags = TextStyleFlags.Empty;
 
-			AnsiColor lastFgColor = fgColor;
-			AnsiColor lastBgColor = bgColor;
-			AnsiStyle lastAnsiStyle = ansiStyle;
-
+			Color lastFgColor = fgColor;
+			Color lastBgColor = bgColor;
+			TextStyleFlags lastFlags = flags;
+/*
 			if (fgColor != Ansi.AnsiColor.None ||
 				bgColor != Ansi.AnsiColor.None ||
 				ansiStyle != Ansi.AnsiStyle.None)
@@ -193,7 +280,7 @@ namespace BatMud.BatClientBase
 				ColorMessage.MetaData md = new ColorMessage.MetaData(stringBuilder.Length, fg, bg);
 				metaData.Add(md);
 			}
-
+*/
 			while (pos < text.Length)
 			{
 				if (text[pos] == '\t')
@@ -226,7 +313,7 @@ namespace BatMud.BatClientBase
 
 					if (pos >= text.Length)
 					{
-						BatConsole.WriteLine("Incomplete ansi sequence");
+						BatConsole.WriteLineLow("Incomplete ansi sequence");
 						stringBuilder.Append(text.Substring(oldPos, pos - oldPos));
 						continue;
 					}
@@ -240,7 +327,7 @@ namespace BatMud.BatClientBase
 
 					if (pos == text.Length)
 					{
-						BatConsole.WriteLine("Incomplete ansi sequence");
+						BatConsole.WriteLineLow("Incomplete ansi sequence");
 						stringBuilder.Append(text.Substring(oldPos, pos - oldPos));
 						continue;
 					}
@@ -265,16 +352,16 @@ namespace BatMud.BatClientBase
 							switch (num)
 							{
 								case 0:		// normal
-									fgColor = Ansi.AnsiColor.None;
-									bgColor = Ansi.AnsiColor.None;
-									ansiStyle = Ansi.AnsiStyle.None;
+									fgColor = Color.Default;
+									bgColor = Color.Default;
+									flags = TextStyleFlags.None;
 									break;
 								case 1:		// bold
-									ansiStyle |= Ansi.AnsiStyle.HighIntensity;
+									flags |= TextStyleFlags.HighIntensity;
 									break;
 
 								case 7:			// inverse
-									ansiStyle |= Ansi.AnsiStyle.Inverse;
+									flags |= TextStyleFlags.Inverse;
 									break;
 
 								case 30:
@@ -285,11 +372,24 @@ namespace BatMud.BatClientBase
 								case 35:
 								case 36:
 								case 37:
-									fgColor = Ansi.NumberToAnsiColor(num - 30);
+									fgColor = Ansi.AnsiColor8ToColor(num - 30);
+									break;
+								
+								case 38:
+									if(arr.Length != 3 || i != 0 || arr[1] != "5")
+									{
+										BatConsole.WriteLineLow("Illegal 256 color ansi code: {0}", str2);
+										break;
+									}
+									
+									fgColor = AnsiColor256ToColor(byte.Parse(arr[2]));
+									
+									i += 3;
+									
 									break;
 
 								case 39:		// default color
-									fgColor = Ansi.AnsiColor.None;
+									fgColor = Color.Default;
 									break;
 
 
@@ -301,46 +401,59 @@ namespace BatMud.BatClientBase
 								case 45:
 								case 46:
 								case 47:
-									bgColor = Ansi.NumberToAnsiColor(num - 40);
+									bgColor = Ansi.AnsiColor8ToColor(num - 40);
 									break;
 
+								case 48:
+									if(arr.Length != 3 || i != 0 || arr[1] != "5")
+									{
+										BatConsole.WriteLineLow("Illegal 256 color ansi code: {0}", str2);
+										break;
+									}
+									
+									bgColor = AnsiColor256ToColor(byte.Parse(arr[2]));
+									
+									i += 3;
+									
+									break;
+									
 								case 49:		// default color
-									bgColor = Ansi.AnsiColor.None;
+									bgColor = Color.Default;
 									break;
 
 								default:
-									BatConsole.WriteLine("Unknown ansi code {0}", num);
+									BatConsole.WriteLineLow("Unknown ansi code {0}", num);
 									break;
 							}
 						}
 
 						if (lastFgColor != fgColor ||
 							lastBgColor != bgColor ||
-							lastAnsiStyle != ansiStyle)
+							lastFlags != flags)
 						{
-							if (fgColor == Ansi.AnsiColor.None)
+							/*
+							if (fgColor == Ansi.AnsiColor.Default)
 								fgColor = Ansi.DefaultFgColor;
-
-							Color fg = Ansi.AnsiColorToColor(fgColor,
-								(ansiStyle & Ansi.AnsiStyle.HighIntensity) != 0);
-
-							Color bg;
-							if (bgColor == Ansi.AnsiColor.None)
-								bg = Color.Empty;
-							else
-								bg = Ansi.AnsiColorToColor(bgColor,
-									(ansiStyle & Ansi.AnsiStyle.HighIntensity) != 0);
-
+								*/
+/*
+							TextStyleFlags flags;
+							if((ansiStyle & Ansi.AnsiStyle.HighIntensity) != 0)
+								flags = TextStyleFlags.HighIntensity;
+							else if((ansiStyle & Ansi.AnsiStyle.Default) != 0)
+								flags = TextStyleFlags.None;
+*/
 							//Console.WriteLine("FG {0} {1} -> {2}", currentAnsiFgColor, currentAnsiStyle, fg);
 							//Console.WriteLine("BG {0} {1} -> {2}", currentAnsiBgColor, currentAnsiStyle, bg);
+							
+							TextStyle style = new TextStyle(fgColor, bgColor, flags);
 
-							ColorMessage.MetaData md = new ColorMessage.MetaData(stringBuilder.Length, fg, bg);
+							ColorMessage.MetaData md = new ColorMessage.MetaData(stringBuilder.Length, style);
 							metaData.Add(md);
 						}
 
 						lastFgColor = fgColor;
 						lastBgColor = bgColor;
-						lastAnsiStyle = ansiStyle;
+						lastFlags = flags;
 					}
 					else if (text[pos] == 'H')
 					{
@@ -357,6 +470,7 @@ namespace BatMud.BatClientBase
 				}
 			}
 
+			/*
 			if (fgColor == DefaultFgColor)
 				currentFgColor = AnsiColor.None;
 			else
@@ -368,7 +482,7 @@ namespace BatMud.BatClientBase
 				currentBgColor = bgColor;
 
 			currentAnsiStyle = ansiStyle;
-
+*/
 			return new ColorMessage(stringBuilder.ToString(), metaData);
 		}
 	}

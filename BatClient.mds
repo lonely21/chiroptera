@@ -15,6 +15,7 @@
     <Execute type="None" entry="BatClientBase" />
     <Execute type="None" entry="BatClientText" />
     <Execute type="None" entry="libbatclient" />
+    <Execute type="None" entry="BatClientWindows" />
   </StartMode>
   <Entries>
     <Entry filename="BatClientBase/BatClientBase.mdp" />
