@@ -3,6 +3,8 @@
 *.pidb
 *.pc
 bin
+obj
 *.[oad]
 *~
+*.suo
 
