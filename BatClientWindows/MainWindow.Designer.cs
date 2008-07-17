@@ -86,7 +86,7 @@ namespace BatMud.BatClientWindows
 			// quitToolStripMenuItem
 			// 
 			this.quitToolStripMenuItem.Name = "quitToolStripMenuItem";
-			this.quitToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+			this.quitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.quitToolStripMenuItem.Text = "Exit";
 			this.quitToolStripMenuItem.Click += new System.EventHandler(this.quitToolStripMenuItem_Click);
 			// 
@@ -212,9 +212,9 @@ namespace BatMud.BatClientWindows
 			this.textView.Size = new System.Drawing.Size(729, 453);
 			this.textView.TabIndex = 4;
 			this.textView.TabStop = false;
-			this.textView.Enter += new System.EventHandler(this.textView_Enter);
-			this.textView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.textView_MouseDown);
 			this.textView.LinkClicked += new BatMud.BatClientWindows.TextViewControl.LinkClickDelegate(this.textView_LinkClicked);
+			this.textView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.textView_MouseDown);
+			this.textView.Enter += new System.EventHandler(this.textView_Enter);
 			// 
 			// promptTextBox
 			// 
@@ -233,10 +233,10 @@ namespace BatMud.BatClientWindows
 			this.promptTextBox.SelectionStart = 0;
 			this.promptTextBox.Size = new System.Drawing.Size(729, 39);
 			this.promptTextBox.TabIndex = 1;
-			this.promptTextBox.rawKeyUp += new System.Windows.Forms.KeyEventHandler(this.promptTextBox_rawKeyUp);
-			this.promptTextBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.textView_MouseDown);
 			this.promptTextBox.textEntered += new BatMud.BatClientWindows.PromptTextBox.TextEnteredDelegate(this.promptTextBox_textEntered);
 			this.promptTextBox.rawKeyDown += new System.Windows.Forms.KeyEventHandler(this.promptTextBox_rawKeyDown);
+			this.promptTextBox.rawKeyUp += new System.Windows.Forms.KeyEventHandler(this.promptTextBox_rawKeyUp);
+			this.promptTextBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.textView_MouseDown);
 			// 
 			// MainWindow
 			// 
@@ -251,9 +251,9 @@ namespace BatMud.BatClientWindows
 			this.MainMenuStrip = this.mainMenu;
 			this.Name = "MainWindow";
 			this.Text = "BatClient";
-			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainWindow_FormClosing);
-			this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.textView_MouseDown);
 			this.Load += new System.EventHandler(this.MainWindow_Load);
+			this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.textView_MouseDown);
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainWindow_FormClosing);
 			this.mainMenu.ResumeLayout(false);
 			this.mainMenu.PerformLayout();
 			this.ResumeLayout(false);

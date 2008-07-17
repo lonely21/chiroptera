@@ -29,6 +29,7 @@ namespace BatMud.BatClientWindows
 		KeyManager m_keyManager;
 
 		bool m_pythonMode = false;
+		bool m_showOutputDebug = false;
 
 		public ClientCore()
 		{
@@ -303,16 +304,24 @@ namespace BatMud.BatClientWindows
 
 		void ReceiveEvent(string data)
 		{
-			ColorMessage colorMsg = Ansi.ParseAnsi(data, ref m_currentStyle);
+			string[] strs = data.Split('\n');
 
-			//ColorMessage colorMsg = new ColorMessage(data);
+			foreach (string str in strs)
+			{
+#if DEBUG
+				if (m_showOutputDebug)
+					BatConsole.WriteLineLow("rcv: " + str.Replace("\x1b", "<esc>"));
+#endif
 
-			colorMsg = m_baseServicesDispatcher.DispatchReceiveColorMessage(colorMsg);
+				ColorMessage colorMsg = Ansi.ParseAnsi(str, ref m_currentStyle);
 
-			if (colorMsg == null)
-				return;
+				colorMsg = m_baseServicesDispatcher.DispatchReceiveColorMessage(colorMsg);
 
-			WriteLine(colorMsg);
+				if (colorMsg == null)
+					return;
+
+				BatConsole.WriteLine(colorMsg);
+			}
 		}
 
 		// Transfers control to MainForm's thread
@@ -500,7 +509,19 @@ namespace BatMud.BatClientWindows
 			if (colorMsg == null)
 				return;
 
-			m_paragraphContainer.Add(new Paragraph(colorMsg));
+#if DEBUG
+			if (m_showOutputDebug)
+				m_paragraphContainer.Add("dbg: " + colorMsg.ToDebugString());
+#endif
+
+			Paragraph p = new Paragraph(colorMsg);
+
+#if DEBUG
+			if (m_showOutputDebug)
+				m_paragraphContainer.Add("esc: " + p.ToDebugString());
+#endif
+
+			m_paragraphContainer.Add(p);
 		}
 
 		public void WriteLineLow(string format, params object[] args)

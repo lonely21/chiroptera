@@ -30,7 +30,35 @@ namespace BatMud.BatClientWindows
 			{
 				m_index = cmMeta.m_index;
 				m_fgColor = cmMeta.m_style.Fg.ToSystemColor();
+				if (m_fgColor.IsEmpty)
+					m_fgColor = System.Drawing.Color.FromArgb(160, 160, 160);
 				m_bgColor = cmMeta.m_style.Bg.ToSystemColor();
+				if (m_bgColor.IsEmpty)
+					m_bgColor = System.Drawing.Color.Black;
+
+				if ((cmMeta.m_style.Flags & TextStyleFlags.HighIntensity) != 0)
+				{
+					bool bold;
+					int c;
+
+					c = Ansi.ColorToAnsiColor8(BatClientBase.Color.FromSystemColor(m_fgColor), out bold);
+					if (bold == false)
+						m_fgColor = Ansi.AnsiColor8ToColor(c, true).ToSystemColor();
+
+					if (!cmMeta.m_style.Bg.IsEmpty)
+					{
+						c = Ansi.ColorToAnsiColor8(BatClientBase.Color.FromSystemColor(m_bgColor), out bold);
+						if (bold == false)
+							m_bgColor = Ansi.AnsiColor8ToColor(c, true).ToSystemColor();
+					}
+				}
+
+				if ((cmMeta.m_style.Flags & TextStyleFlags.Inverse) != 0)
+				{
+					System.Drawing.Color tmp = m_fgColor;
+					m_fgColor = m_bgColor;
+					m_bgColor = tmp;
+				}
 			}
 
 			public MetaData(int index, System.Drawing.Color textColor, System.Drawing.Color backgroundColor)
@@ -120,5 +148,23 @@ namespace BatMud.BatClientWindows
 			}
 			return strBuilder.ToString();
 		}
+
+		public string ToDebugString()
+		{
+			StringBuilder sb = new StringBuilder();
+
+			sb.Append(m_text.ToString());
+
+			int i = m_meta.Length - 1;
+
+			for (; i >= 0; i--)
+			{
+				string s = String.Format("<{0}/{1}>", m_meta[i].m_fgColor, m_meta[i].m_bgColor);
+				sb.Insert(m_meta[i].m_index, s);
+			}
+
+			return sb.ToString();
+		}
+
 	}
 }

@@ -7,4 +7,5 @@ obj
 *.[oad]
 *~
 *.suo
+*.csproj.user
 

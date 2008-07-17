@@ -8,9 +8,9 @@ namespace BatMud.BatClientBase
 	public enum TextStyleFlags
 	{
 		Empty = 0,		// No flags, doesn't change the text
-		None = 1,		// No flags, resets the text to defaults
-		HighIntensity = 2,
-		Inverse = 3
+		None = 1<<0,		// No flags, resets the text to defaults
+		HighIntensity = 1<<1,
+		Inverse = 1<<2
 	}
 	
 	public class TextStyle

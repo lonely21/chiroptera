@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BatClientWindows", "BatClie
 		{C31F660E-90FF-4D5D-90E4-04E7FF24EF08} = {C31F660E-90FF-4D5D-90E4-04E7FF24EF08}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BatClientText", "BatClientText\BatClientText.csproj", "{3702B690-4844-47FA-B8C3-3A30EA8FFA47}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,6 +34,13 @@ Global
 		{F72D97C3-F609-46A6-A4EA-87034C2E9FCF}.Signed Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F72D97C3-F609-46A6-A4EA-87034C2E9FCF}.Signed Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F72D97C3-F609-46A6-A4EA-87034C2E9FCF}.Signed Release|Any CPU.Build.0 = Release|Any CPU
+		{3702B690-4844-47FA-B8C3-3A30EA8FFA47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3702B690-4844-47FA-B8C3-3A30EA8FFA47}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3702B690-4844-47FA-B8C3-3A30EA8FFA47}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3702B690-4844-47FA-B8C3-3A30EA8FFA47}.Signed Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3702B690-4844-47FA-B8C3-3A30EA8FFA47}.Signed Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3702B690-4844-47FA-B8C3-3A30EA8FFA47}.Signed Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3702B690-4844-47FA-B8C3-3A30EA8FFA47}.Signed Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

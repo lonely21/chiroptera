@@ -79,9 +79,9 @@ namespace BatMud.BatClientBase
 		public enum AnsiStyle
 		{
 			None = 0,
-			Default = 1,
-			HighIntensity = 2,
-			Inverse = 3
+			Default = 1<<0,
+			HighIntensity = 1<<1,
+			Inverse = 1<<2
 		}
 
 		static Color[] m_ansiColorArray = new Color[] { 
@@ -98,9 +98,8 @@ namespace BatMud.BatClientBase
 			Color.FromArgb(255, 255, 255) 
 		};
 
-		public static Color AnsiColor8ToColor(int color)
+		public static Color AnsiColor8ToColor(int color, bool highIntensity)
 		{
-			bool highIntensity = false; // xxx
 			switch (color)
 			{
 				case -1:
@@ -379,7 +378,7 @@ namespace BatMud.BatClientBase
 								case 35:
 								case 36:
 								case 37:
-									fgColor = Ansi.AnsiColor8ToColor(num - 30);
+									fgColor = Ansi.AnsiColor8ToColor(num - 30, false);
 									break;
 								
 								case 38:
@@ -408,7 +407,7 @@ namespace BatMud.BatClientBase
 								case 45:
 								case 46:
 								case 47:
-									bgColor = Ansi.AnsiColor8ToColor(num - 40);
+									bgColor = Ansi.AnsiColor8ToColor(num - 40, false);
 									break;
 
 								case 48:
