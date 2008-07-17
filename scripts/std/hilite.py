@@ -77,16 +77,18 @@ if testmode and BatMud.BatClientBase.PythonInterface.IsDebug():
 	from batclient import *
 
 	#write("\x1b[38;5;41mkala\x1b[0mkissa")
-	#receive("\x1b[38;5;41mkala\x1b[0mkissa")
+	receive("jee")
+	receive("\x1b[7mXX\x1b[1mXX\x1b[38;5;41mka\nXX\x1b[0mkissa")
+	receive("joo")
 
 	#receive(create256())
 	
-	hilitecmd("kiki")
-	hilitecmd("-c green youro")
-	hilitecmd("-c yellow Tomba")
+	#hilitecmd("kiki")
+	#hilitecmd("-c green youro")
+	#hilitecmd("-c yellow Tomba")
 
-	receive("You unzip your tomba kiki kuu and mumbku")
-	receive("You unzip your zipper and mumb")
-	receive("You unzip youro huku'")
-	receive("You unzip tomba zipper tomba mumble 'kaakaa tomba kuu mopo huku'")
+	#receive("You unzip your tomba kiki kuu and mumbku")
+	#receive("You unzip your zipper and mumb")
+	#receive("You unzip youro huku'")
+	#receive("You unzip tomba zipper tomba mumble 'kaakaa tomba kuu mopo huku'")
 

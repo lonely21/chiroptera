@@ -51,6 +51,7 @@ namespace BatMud.BatClientBase
 		public Color Fg { get { return m_fgColor; } }
 		public Color Bg { get { return m_bgColor; } }
 		public bool IsHighIntensity { get { return (m_flags & TextStyleFlags.HighIntensity) != 0; } }
+		public bool IsReverse  { get { return (m_flags & TextStyleFlags.Inverse) != 0; } }
 		
 		public TextStyle Combine(TextStyle style)
 		{

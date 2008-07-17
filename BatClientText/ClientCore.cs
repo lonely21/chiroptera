@@ -342,25 +342,25 @@ namespace BatMud.BatClientText
 			m_synchronizedInvoke.BeginInvoke(new Telnet.ReceiveDelegate(ReceiveEvent), new object[] { data });
 		}
 
-		Ansi.AnsiColor m_currentFgColor = Ansi.AnsiColor.None;
-		Ansi.AnsiColor m_currentBgColor = Ansi.AnsiColor.None;
-		Ansi.AnsiStyle m_currentAnsiStyle;
+		TextStyle m_currentStyle = new TextStyle();
 		
 		void ReceiveEvent(string data)
 		{
-			ColorMessage colorMsg = Ansi.ParseAnsi(data, ref m_currentFgColor, ref m_currentBgColor, ref m_currentAnsiStyle);
-
-			//BatConsole.WriteLine("received {0}", data);
-			//BatConsole.WriteLine("colormsg {0}", colorMsg.ToDebugString());
+			string[] strs = data.Split('\n');
 			
-			colorMsg = m_baseServicesDispatcher.DispatchReceiveColorMessage(colorMsg);
-
-			if (colorMsg == null)
-				return;
-
-			//BatConsole.WriteLine("procesmsg {0}", colorMsg.ToDebugString());
-
-			BatConsole.WriteLine(colorMsg);
+			foreach(string str in strs)
+			{
+				BatConsole.WriteLineLow("rcv: " + str.Replace("\x1b", "<esc>"));
+				
+				ColorMessage colorMsg = Ansi.ParseAnsi(str, ref m_currentStyle);
+				
+				colorMsg = m_baseServicesDispatcher.DispatchReceiveColorMessage(colorMsg);
+				
+				if (colorMsg == null)
+					return;
+				
+				BatConsole.WriteLine(colorMsg);
+			}
 		}
 
 		// Transfers control to main thread

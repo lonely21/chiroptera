@@ -94,11 +94,8 @@ namespace BatMud.BatClientText
 		{
 			string str = msg.ToAnsiString();
 			
-			const char ESC = '\x1b';
-			string estr = str.Replace(ESC.ToString(), "<esc>"); 
-
 			Terminal.WriteLine("dbg: " + msg.ToDebugString());
-			Terminal.WriteLine("esc: " + estr);
+			Terminal.WriteLine("esc: " + str.Replace("\x1b", "<esc>"));
 			
 			Terminal.WriteLine(str);
 			/*

@@ -244,8 +244,7 @@ namespace BatMud.BatClientBase
 			return best_match;
 		}
 
-		public static ColorMessage ParseAnsi(string text,
-			ref Ansi.AnsiColor currentFgColor, ref Ansi.AnsiColor currentBgColor, ref Ansi.AnsiStyle currentAnsiStyle)
+		public static ColorMessage ParseAnsi(string text, ref TextStyle currentStyle)
 		{
 			const char ESC = '\x1b';
 
@@ -255,13 +254,21 @@ namespace BatMud.BatClientBase
 			int pos = 0;
 			int oldPos = 0;
 
-			Color fgColor = Color.Empty;
-			Color bgColor = Color.Empty;
-			TextStyleFlags flags = TextStyleFlags.Empty;
+			Color fgColor = currentStyle.Fg;
+			Color bgColor = currentStyle.Bg;
+			TextStyleFlags flags = currentStyle.Flags;
 
 			Color lastFgColor = fgColor;
 			Color lastBgColor = bgColor;
 			TextStyleFlags lastFlags = flags;
+			
+			if(!currentStyle.Fg.IsEmpty ||
+			   !currentStyle.Bg.IsEmpty ||
+			   (currentStyle.Flags & TextStyleFlags.Empty) != 0)
+			{
+				ColorMessage.MetaData md = new ColorMessage.MetaData(stringBuilder.Length, currentStyle);
+				metaData.Add(md);
+			}
 /*
 			if (fgColor != Ansi.AnsiColor.None ||
 				bgColor != Ansi.AnsiColor.None ||
@@ -470,6 +477,16 @@ namespace BatMud.BatClientBase
 				}
 			}
 
+			if(fgColor == Color.Default)
+				fgColor = Color.Empty;
+			
+			if(bgColor == Color.Default)
+				bgColor = Color.Empty;
+			
+			if((flags & TextStyleFlags.None) != 0)
+				flags = TextStyleFlags.Empty;
+			
+			currentStyle = new TextStyle(fgColor, bgColor, flags);
 			/*
 			if (fgColor == DefaultFgColor)
 				currentFgColor = AnsiColor.None;

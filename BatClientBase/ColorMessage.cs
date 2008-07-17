@@ -255,7 +255,7 @@ namespace BatMud.BatClientBase
 				MetaData md = m_metaData[i];
 				TextStyle style = md.m_style;
 				
-				bool use256 = true;
+				bool use256 = false;
 
 				StringBuilder esb = new StringBuilder();
 				
@@ -336,6 +336,13 @@ namespace BatMud.BatClientBase
 					else
 						esb.Append('0');
 					
+					if(style.IsReverse)
+					{
+						if(esb.Length > 2)
+							esb.Append(';');
+						esb.Append("7");
+					}
+					
 					if(fg != -1)
 					{
 						if(esb.Length > 2)
@@ -356,7 +363,9 @@ namespace BatMud.BatClientBase
 				sb.Insert(md.m_index, esb.ToString());
 			}
 
-			//sb.Append(String.Format("{0}[0m", ESC));
+			if(m_metaData.Count > 0)
+				sb.Append(String.Format("{0}[0m", ESC));
+			
 			return sb.ToString();
 		}
 		
