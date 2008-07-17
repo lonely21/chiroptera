@@ -35,8 +35,8 @@ namespace BatMud.BatClientWindows
 		{
 			Hilite hilite = (Hilite)item.Tag;
 			item.SubItems[0].Text = hilite.Pattern;
-			item.SubItems[1].Text = hilite.FgColor.Name;
-			item.SubItems[2].Text = hilite.BgColor.Name;
+			item.SubItems[1].Text = hilite.Style.Fg.Name;
+			item.SubItems[2].Text = hilite.Style.Bg.Name;
 			item.SubItems[3].Text = hilite.IgnoreCase.ToString();
 			item.SubItems[4].Text = hilite.HiliteLine.ToString();
 		}
@@ -66,8 +66,8 @@ namespace BatMud.BatClientWindows
 				fgButton.Enabled = false;
 				bgCheckBox.Checked = true;
 				bgButton.Enabled = false;
-				fgButton.BackColor = Color.Empty;
-				bgButton.BackColor = Color.Empty;
+				fgButton.BackColor = System.Drawing.Color.Empty;
+				bgButton.BackColor = System.Drawing.Color.Empty;
 				return;
 			}
 
@@ -77,11 +77,11 @@ namespace BatMud.BatClientWindows
 
 			patternTextBox.Text = hilite.Pattern;
 			ignoreCaseCheckBox.Checked = hilite.IgnoreCase;
-			fgButton.BackColor = hilite.FgColor;
-			bgButton.BackColor = hilite.BgColor;
+			fgButton.BackColor = hilite.Style.Fg.ToSystemColor();
+			bgButton.BackColor = hilite.Style.Bg.ToSystemColor();
 			hiliteLineCheckBox.Checked = hilite.HiliteLine;
 
-			if (hilite.FgColor == Color.Empty)
+			if (hilite.Style.Fg.IsEmpty)
 			{
 				fgCheckBox.Checked = true;
 				fgButton.Enabled = false;
@@ -92,7 +92,7 @@ namespace BatMud.BatClientWindows
 				fgButton.Enabled = true;
 			}
 
-			if (hilite.BgColor == Color.Empty)
+			if (hilite.Style.Bg.IsEmpty)
 			{
 				bgCheckBox.Checked = true;
 				bgButton.Enabled = false;
@@ -106,7 +106,7 @@ namespace BatMud.BatClientWindows
 
 		private void newButton_Click(object sender, EventArgs e)
 		{
-			Hilite hilite = new Hilite("", false, Color.Empty, Color.Empty, false);
+			Hilite hilite = new Hilite("", false, new TextStyle(), false);
 			PythonInterface.HiliteManager.AddHilite(hilite);
 
 			ListViewItem item = HiliteToListViewItem(hilite);
@@ -167,14 +167,19 @@ namespace BatMud.BatClientWindows
 			}
 
 			hilite.IgnoreCase = ignoreCaseCheckBox.Checked;
+			BatClientBase.Color fg, bg;
+
 			if (fgCheckBox.Checked)
-				hilite.FgColor = Color.Empty;
+				fg = BatClientBase.Color.Empty;
 			else
-				hilite.FgColor = fgButton.BackColor;
+				fg = BatClientBase.Color.FromSystemColor(fgButton.BackColor);
 			if (bgCheckBox.Checked)
-				hilite.BgColor = Color.Empty;
+				bg = BatClientBase.Color.Empty;
 			else
-				hilite.BgColor = bgButton.BackColor;
+				bg = BatClientBase.Color.FromSystemColor(bgButton.BackColor);
+
+			hilite.Style = new TextStyle(fg, bg);
+
 			hilite.HiliteLine = hiliteLineCheckBox.Checked;
 
 			UpdateListViewItem(item);

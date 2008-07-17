@@ -8,8 +8,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BatClientWindows", "BatClie
 		{C31F660E-90FF-4D5D-90E4-04E7FF24EF08} = {C31F660E-90FF-4D5D-90E4-04E7FF24EF08}
 	EndProjectSection
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "BatClientSetup", "BatClientSetup\BatSetup.vdproj", "{5F4822A0-021D-4C3C-BD96-C4D231FCC120}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,13 +32,6 @@ Global
 		{F72D97C3-F609-46A6-A4EA-87034C2E9FCF}.Signed Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F72D97C3-F609-46A6-A4EA-87034C2E9FCF}.Signed Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F72D97C3-F609-46A6-A4EA-87034C2E9FCF}.Signed Release|Any CPU.Build.0 = Release|Any CPU
-		{5F4822A0-021D-4C3C-BD96-C4D231FCC120}.Debug|Any CPU.ActiveCfg = Debug
-		{5F4822A0-021D-4C3C-BD96-C4D231FCC120}.Release|Any CPU.ActiveCfg = Release
-		{5F4822A0-021D-4C3C-BD96-C4D231FCC120}.Release|Any CPU.Build.0 = Release
-		{5F4822A0-021D-4C3C-BD96-C4D231FCC120}.Signed Debug|Any CPU.ActiveCfg = Debug
-		{5F4822A0-021D-4C3C-BD96-C4D231FCC120}.Signed Debug|Any CPU.Build.0 = Debug
-		{5F4822A0-021D-4C3C-BD96-C4D231FCC120}.Signed Release|Any CPU.ActiveCfg = Release
-		{5F4822A0-021D-4C3C-BD96-C4D231FCC120}.Signed Release|Any CPU.Build.0 = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

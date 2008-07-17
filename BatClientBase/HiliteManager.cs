@@ -33,6 +33,7 @@ namespace BatMud.BatClientBase
 		public TextStyle Style
 		{
 			get { return m_style; }
+			set { m_style = value; }
 		}
 		/*
 		[XmlIgnore()]

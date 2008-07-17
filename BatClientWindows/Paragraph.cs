@@ -22,18 +22,18 @@ namespace BatMud.BatClientWindows
 		public class MetaData
 		{
 			public int m_index;
-			public Color m_fgColor;
-			public Color m_bgColor;
+			public System.Drawing.Color m_fgColor;
+			public System.Drawing.Color m_bgColor;
 			public bool m_isLink = false;
 
 			public MetaData(ColorMessage.MetaData cmMeta)
 			{
 				m_index = cmMeta.m_index;
-				m_fgColor = cmMeta.m_fgColor;
-				m_bgColor = cmMeta.m_bgColor;
+				m_fgColor = cmMeta.m_style.Fg.ToSystemColor();
+				m_bgColor = cmMeta.m_style.Bg.ToSystemColor();
 			}
 
-			public MetaData(int index, Color textColor, Color backgroundColor)
+			public MetaData(int index, System.Drawing.Color textColor, System.Drawing.Color backgroundColor)
 			{
 				m_index = index;
 				m_fgColor = textColor;
@@ -61,7 +61,7 @@ namespace BatMud.BatClientWindows
 
 			// look for links. this is not really the best place for this...
 			// TODO: breaks if there are color changes in the link
-
+#if disabled
 			MatchCollection matches = s_linkRegexp.Matches(m_text);
 
 			if (matches.Count > 0)
@@ -107,6 +107,7 @@ namespace BatMud.BatClientWindows
 
 				m_meta = metaDataList.ToArray();
 			}
+#endif
 		}
 
 		public override string ToString()

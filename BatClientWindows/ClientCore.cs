@@ -95,7 +95,8 @@ namespace BatMud.BatClientWindows
 			PythonInterface.Initialize(m_baseServicesDispatcher, m_triggerManager, m_commandManager, this,
 				this, m_pythonEngine, m_keyManager, m_hiliteManager);
 
-			try			{
+			try
+			{
 #if DEBUG
 				PythonInterface.RunScript(Path.GetFullPath("../../../scripts/std/init_std.bc"));
 #else
@@ -298,13 +299,11 @@ namespace BatMud.BatClientWindows
 			m_mainWindow.BeginInvoke(new Telnet.ReceiveDelegate(ReceiveEvent), new object[] { data });
 		}
 
-		Ansi.AnsiColor m_currentFgColor = Ansi.AnsiColor.None;
-		Ansi.AnsiColor m_currentBgColor = Ansi.AnsiColor.None;
-		Ansi.AnsiStyle m_currentStyle = Ansi.AnsiStyle.None;
+		TextStyle m_currentStyle = new TextStyle();
 
 		void ReceiveEvent(string data)
 		{
-			ColorMessage colorMsg = Ansi.ParseAnsi(data, ref m_currentFgColor, ref m_currentBgColor, ref m_currentStyle);
+			ColorMessage colorMsg = Ansi.ParseAnsi(data, ref m_currentStyle);
 
 			//ColorMessage colorMsg = new ColorMessage(data);
 

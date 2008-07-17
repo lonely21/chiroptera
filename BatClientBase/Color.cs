@@ -43,6 +43,11 @@ namespace BatMud.BatClientBase
 			return m_color;
 		}
 
+		public string Name
+		{
+			get { return m_color.Name; }
+		}
+
 		public string ToHtml()
 		{
 			return SD.ColorTranslator.ToHtml(ToSystemColor());
