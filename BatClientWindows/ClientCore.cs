@@ -536,11 +536,6 @@ namespace BatMud.BatClientWindows
 			}
 		}
 
-		public string ReadLine()
-		{
-			throw new NotImplementedException();
-		}
-
 		public string Prompt
 		{
 			get { return m_mainWindow.PromptTextBox.Prompt; }

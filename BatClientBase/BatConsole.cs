@@ -11,8 +11,6 @@ namespace BatMud.BatClientBase
 		void WriteLine(ColorMessage msg);
 		void WriteLineLow(string format, params object[] args);
 
-		string ReadLine();
-
 		string Prompt
 		{
 			get;
@@ -55,11 +53,6 @@ namespace BatMud.BatClientBase
 			public void WriteLineLow(string format, params object[] args)
 			{
 				Console.WriteLine(format, args);
-			}
-
-			public string ReadLine()
-			{
-				throw new Exception("The method or operation is not implemented.");
 			}
 
 			public string Prompt
@@ -111,15 +104,16 @@ namespace BatMud.BatClientBase
 			s_console.WriteLineLow(format, args);
 		}
 
-		public static string ReadLine()
-		{
-			return s_console.ReadLine();
-		}
-
 		public static string Prompt
 		{
 			get { return s_console.Prompt; }
 			set { s_console.Prompt = value; }
+		}
+
+		public static string InputLine
+		{
+			get { return s_console.InputLine; }
+			set { s_console.InputLine = value; }
 		}
 
 		public static void WriteError(string error)

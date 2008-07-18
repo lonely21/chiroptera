@@ -14,10 +14,11 @@ namespace BatMud.BatClientWindows
 		public MetaData[] m_meta;
 		public int m_lines; // how many lines this paragraphs takes with current number of columns
 		
+#if asd
 		static Regex s_linkRegexp = new Regex(@"((ftp|http|https|mailto|news|nntp|telnet|file)://" +
 			@"(([A-Za-z0-9$_.+!*(),;/?:@&~=-])|%[A-Fa-f0-9]{2}){2,}(#([a-zA-Z0-9][a-zA-Z0-9$_.+!*(),;/?:@&~=%-]*))?([A-Za-z0-9$_+!*();/?:~-]))",
 			 RegexOptions.Compiled);
-		
+#endif
 
 		public class MetaData
 		{

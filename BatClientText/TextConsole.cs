@@ -9,14 +9,8 @@ namespace BatMud.BatClientText
 {
 	class TextConsole : IBatConsole
 	{
-		static TextConsole s_console;
-
-		string m_prompt = "";
-		
 		public TextConsole()
 		{
-			s_console = this;
-			
 			Terminal.Init();
 		}
 
@@ -54,35 +48,12 @@ namespace BatMud.BatClientText
 		
 		public void WriteLine(string str)
 		{
-			Terminal.WriteLine(str);
-			/*
-			if(m_visualMode)
-				SetOutputMode();
-
 			string[] lines = str.Split(new string[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
 			foreach (string line in lines)
 			{
 				ColorMessage msg = new ColorMessage(line);
-
-				msg = PythonInterface.ServicesDispatcher.DispatchOutputMessage(msg);
-				if (msg == null)
-					continue;
-
-				if(m_visualMode)
-				{
-					// Move to next line
-					Console.WriteLine();
-					Console.Write(msg.ToAnsiString());
-				}
-				else
-				{
-					Console.WriteLine(msg.ToAnsiString());
-				}
+				WriteLine(msg);
 			}
-
-			if(m_visualMode)
-				SetInputMode();
-				*/
 		}
 
 		public void WriteLine(string format, params object[] args)
@@ -92,93 +63,40 @@ namespace BatMud.BatClientText
 
 		public void WriteLine(ColorMessage msg)
 		{
+			msg = PythonInterface.ServicesDispatcher.DispatchOutputMessage(msg);
+			if (msg == null)
+				return;
+
 			string str = msg.ToAnsiString();
 			
 			Terminal.WriteLine("dbg: " + msg.ToDebugString());
 			Terminal.WriteLine("esc: " + str.Replace("\x1b", "<esc>"));
 			
 			Terminal.WriteLine(str);
-			/*
-			
-			if(m_visualMode)
-				SetOutputMode();
-			
-			msg = PythonInterface.ServicesDispatcher.DispatchOutputMessage(msg);
-			if (msg == null)
-				return;
-			
-			if(m_visualMode)
-			{
-				// Move to next line
-				Console.WriteLine();
-				Console.Write(msg.ToAnsiString());
-			}
-			else
-			{
-				Console.WriteLine(msg.ToAnsiString());
-			}
-			
-			if(m_visualMode)
-				SetInputMode();
-				*/
 		}
 
 		public void WriteLineLow(string format, params object[] args)
 		{
-			Terminal.WriteLine(format, args);
-			/*
-			if (m_visualMode)
-				SetOutputMode();
-
 			string str = String.Format(format, args);
 
 			string[] lines = str.Split(new string[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
 			foreach (string line in lines)
 			{
 				ColorMessage msg = new ColorMessage(line);
-
-				if (m_visualMode)
-				{
-					// Move to next line
-					Console.WriteLine();
-					Console.Write(msg.ToAnsiString());
-				}
-				else
-				{
-					Console.WriteLine(msg.ToAnsiString());
-				}
+				Terminal.WriteLine(msg.ToAnsiString());
 			}
-
-			if (m_visualMode)
-				SetInputMode();
-				*/
-		}
-		public string ReadLine()
-		{
-			throw new NotImplementedException();
-			//return GNUReadLine.ReadLine(m_prompt);
 		}
 		
 		public string Prompt
 		{
-			get { return m_prompt; }
-			set
-			{
-				m_prompt = value;
-				GNUReadLine.SetPrompt(s_console.m_prompt);
-			}
+			get { return Terminal.Prompt; }
+			set { Terminal.Prompt = value; }
 		}
 
 		public string InputLine
 		{
-			get
-			{
-				throw new Exception("The method or operation is not implemented.");
-			}
-			set
-			{
-				throw new Exception("The method or operation is not implemented.");
-			}
+			get { return Terminal.Line; }
+			set { Terminal.Line = value;}
 		}
 
 		#endregion

@@ -33,6 +33,16 @@ int mono_rl_get_window_size(int *w, int *h)
 	}
 }
 
+const char *mono_rl_get_line()
+{
+	return rl_line_buffer;
+}
+
+void mono_rl_set_line(const char *str)
+{
+	rl_replace_line(str, 0);
+}
+
 void mono_rl_set_event_hook(int (*fn)())
 {
 	rl_event_hook = fn;

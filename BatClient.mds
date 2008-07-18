@@ -4,11 +4,13 @@
       <Entry build="True" name="BatClientBase" configuration="Debug" />
       <Entry build="True" name="BatClientText" configuration="Debug" />
       <Entry build="True" name="libbatclient" configuration="Debug" />
+      <Entry build="True" name="BatClientWindows" configuration="Debug" />
     </Configuration>
     <Configuration name="Release" ctype="CombineConfiguration">
       <Entry build="True" name="BatClientBase" configuration="Release" />
       <Entry build="True" name="BatClientText" configuration="Release" />
       <Entry build="True" name="libbatclient" configuration="Release" />
+      <Entry build="True" name="BatClientWindows" configuration="Release" />
     </Configuration>
   </Configurations>
   <StartMode startupentry="BatClientText" single="True">
@@ -16,10 +18,12 @@
     <Execute type="None" entry="BatClientText" />
     <Execute type="None" entry="libbatclient" />
     <Execute type="None" entry="BatClientWindows" />
+    <Execute type="None" entry="BatClientWindows" />
   </StartMode>
   <Entries>
     <Entry filename="BatClientBase/BatClientBase.mdp" />
     <Entry filename="BatClientText/BatClientText.mdp" />
     <Entry filename="libbatclient/libbatclient.mdp" />
+    <Entry filename="BatClientWindows/BatClientWindows.mdp" />
   </Entries>
 </Combine>

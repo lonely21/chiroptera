@@ -7,7 +7,7 @@ public static class GNUReadLine
 	public delegate void LineHandlerDelegate(IntPtr line);
 	
 	[DllImport("libreadline", CallingConvention = CallingConvention.Cdecl)]
-	extern static int rl_set_prompt(string str);
+	public extern static int rl_set_prompt(string str);
 
 	[DllImport("libreadline", CallingConvention = CallingConvention.Cdecl)]
 	public extern static void stifle_history(int max);
@@ -83,10 +83,10 @@ public static class GNUReadLine
 	[DllImport("libbatclient", CallingConvention = CallingConvention.Cdecl)]
 	public extern static void mono_rl_restore();
 
-	static public void SetPrompt(string prompt)
-	{
-		rl_set_prompt(prompt);
-		rl_redisplay();
-	}
+	[DllImport("libbatclient", CallingConvention = CallingConvention.Cdecl)]
+	public extern static IntPtr mono_rl_get_line();
+
+	[DllImport("libbatclient", CallingConvention = CallingConvention.Cdecl)]
+	public extern static void mono_rl_set_line(string str);
 }
 
