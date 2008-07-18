@@ -1,19 +1,24 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.IO;
 using Mono.Unix;
-using Mono.Unix.Native;
 
 namespace BatMud.BatClientText
 {
-	class Program
+	static class Program
 	{
+		public static string ConfigPath;
+		
 		static void Main()
 		{
 			if (!System.Diagnostics.Debugger.IsAttached)
 			{
 				AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 			}
+
+			ConfigPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+			ConfigPath = Path.Combine(ConfigPath, "batclient");
+			if(!File.Exists(ConfigPath))
+				Directory.CreateDirectory(ConfigPath);			
 			
 			ClientCore clientCore = new ClientCore();
 

@@ -13,6 +13,12 @@ public static class GNUReadLine
 	public extern static void stifle_history(int max);
 
 	[DllImport("libreadline", CallingConvention = CallingConvention.Cdecl)]
+	public extern static int read_history(string filename);
+
+	[DllImport("libreadline", CallingConvention = CallingConvention.Cdecl)]
+	public extern static int write_history(string filename);
+	
+	[DllImport("libreadline", CallingConvention = CallingConvention.Cdecl)]
 	public extern static void rl_redisplay();
 	
 	[DllImport("libreadline", CallingConvention = CallingConvention.Cdecl)]

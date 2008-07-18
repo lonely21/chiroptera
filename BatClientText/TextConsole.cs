@@ -11,6 +11,7 @@ namespace BatMud.BatClientText
 	{
 		public TextConsole()
 		{
+			Terminal.Load();
 			Terminal.Init();
 		}
 
