@@ -83,12 +83,12 @@ if testmode and BatMud.BatClientBase.PythonInterface.IsDebug():
 
 	#receive(create256())
 	
-	#hilitecmd("kiki")
-	#hilitecmd("-c green youro")
-	#hilitecmd("-c yellow Tomba")
+	hilitecmd("kiki")
+	hilitecmd("-c green youro")
+	hilitecmd("-c yellow Tomba")
 
-	#receive("You unzip your tomba kiki kuu and mumbku")
-	#receive("You unzip your zipper and mumb")
-	#receive("You unzip youro huku'")
-	#receive("You unzip tomba zipper tomba mumble 'kaakaa tomba kuu mopo huku'")
+	receive("You unzip your tomba kiki kuu and mumbku")
+	receive("You unzip your zipper and mumb")
+	receive("You unzip youro huku'")
+	receive("You unzip tomba zipper tomba mumble 'kaakaa tomba kuu mopo huku'")
 

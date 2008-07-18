@@ -12,9 +12,13 @@ public static class TermInfo
 */
 	[DllImport("libncurses", CallingConvention = CallingConvention.Cdecl)]
 		extern static IntPtr tigetstr(string cap);
+
+	[DllImport("libncurses", CallingConvention = CallingConvention.Cdecl)]
+		extern static IntPtr tparm(string cap, int p1);
 	
 	[DllImport("libncurses", CallingConvention = CallingConvention.Cdecl)]
 		extern static IntPtr tparm(string cap, int p1, int p2);
+
 	
 	static bool m_initialized = false;
 
@@ -30,6 +34,20 @@ public static class TermInfo
 			throw new Exception("Terminfo failed to initialize.");
 		}
 
+		string s;
+	
+		s = TGetStr("is1");
+		if(s != null)
+			Console.Write(s);
+
+		s = TGetStr("is2");
+		if(s != null)
+			Console.Write(s);
+
+		s = TGetStr("is3");
+		if(s != null)
+			Console.Write(s);
+		
 		if(fullScreen)
 			Console.Write(TGetStr("smcup"));
 		Console.Write(TGetStr("clear"));
@@ -39,7 +57,21 @@ public static class TermInfo
 	{
 		if(fullScreen)
 			Console.Write(TGetStr("rmcup"));
-		Console.Write(TGetStr("rs1"));
+		
+		string s;
+		
+		s = TGetStr("rs1");
+		if(s != null)
+			Console.Write(s);
+
+		s = TGetStr("rs2");
+		if(s != null)
+			Console.Write(s);
+
+		s = TGetStr("rs3");
+		if(s != null)
+			Console.Write(s);
+		
 		m_initialized = false;
 	}
 
@@ -62,7 +94,17 @@ public static class TermInfo
 		//return Console.WindowWidth;
 		//return TGetNum("columns");
 	}
+	
+	static public string SetBgColor(int color)
+	{
+		return TParm(TGetStr("setab"), color);
+	}
 
+	static public string SetFgColor(int color)
+	{
+		return TParm(TGetStr("setaf"), color);
+	}
+	
 	static public void SaveCursor()
 	{
 		Console.Write(TermInfo.TGetStr("sc"));
@@ -103,7 +145,8 @@ public static class TermInfo
 		IntPtr strptr = tigetstr(cap);
 		if(strptr == IntPtr.Zero || (int)strptr == -1)
 		{
-			throw new Exception(String.Format("tigetstr({0}) failed: {1}", cap, strptr));
+			return null;
+			//throw new Exception(String.Format("tigetstr({0}) failed: {1}", cap, strptr));
 		}
 
 		// count # bytes
@@ -115,14 +158,13 @@ public static class TermInfo
 		return System.Text.Encoding.Default.GetString (buf);
 	}
 
-	static string TParm(string str, int p1, int p2)
+	static string NativeToString(IntPtr strptr)
 	{
-		IntPtr strptr = tparm(str, p1, p2);
 		if(strptr == IntPtr.Zero)
 		{
 			throw new Exception("tparm() failed");
 		}
-
+			
 		// count # bytes
 		int i = 0;
 		while(Marshal.ReadByte(strptr, i) != (byte)0)
@@ -132,4 +174,13 @@ public static class TermInfo
 		return System.Text.Encoding.Default.GetString (buf);
 	}
 
+	static string TParm(string str, int p1)
+	{
+		return NativeToString(tparm(str, p1));
+	}
+		
+	static string TParm(string str, int p1, int p2)
+	{
+		return NativeToString(tparm(str, p1, p2));
+	}
 }

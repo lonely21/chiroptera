@@ -246,7 +246,7 @@ namespace BatMud.BatClientBase
 			get { return m_text.Length; }
 		}
 
-		public string ToAnsiString()
+		public string ToAnsiString(bool use256)
 		{
 			StringBuilder sb = new StringBuilder(m_text.ToString());
 
@@ -255,19 +255,24 @@ namespace BatMud.BatClientBase
 				MetaData md = m_metaData[i];
 				TextStyle style = md.m_style;
 				
-				bool use256 = false;
-
 				StringBuilder esb = new StringBuilder();
 				
 				if(use256)
 				{
 					esb.Append(ESC);
 					esb.Append('[');
-
 					if(style.IsHighIntensity)
 						esb.Append('1');
 					else
-						esb.Append('0');
+						esb.Append("22");
+					esb.Append('m');
+
+					esb.Append(ESC);
+					esb.Append('[');
+					if(style.IsReverse)
+						esb.Append('7');
+					else
+						esb.Append("27");
 					esb.Append('m');
 					
 					if(!style.Fg.IsEmpty)
@@ -334,26 +339,23 @@ namespace BatMud.BatClientBase
 					if(bold || style.IsHighIntensity)
 						esb.Append('1');
 					else
-						esb.Append('0');
+						esb.Append("22");
 					
+					esb.Append(';');
 					if(style.IsReverse)
-					{
-						if(esb.Length > 2)
-							esb.Append(';');
 						esb.Append("7");
-					}
+					else
+						esb.Append("27");
 					
 					if(fg != -1)
 					{
-						if(esb.Length > 2)
-							esb.Append(';');
+						esb.Append(';');
 						esb.Append(fg.ToString());
 					}
 					
 					if(bg != -1)
 					{
-						if(esb.Length > 2)
-							esb.Append(';');
+						esb.Append(';');
 						esb.Append(bg.ToString());
 					}
 					

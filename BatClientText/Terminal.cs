@@ -25,7 +25,7 @@ namespace BatMud.BatClientText
 
 		static string m_statusLine;
 
-		static bool m_visualMode = false;
+		static bool m_visualMode = true;
 
 		static bool m_initialized = false;
 		
@@ -97,6 +97,10 @@ namespace BatMud.BatClientText
 			sb.Remove(10, s.Length);
 			sb.Insert(10, s);
 
+			s = DateTime.Now.ToShortTimeString();
+			sb.Remove(m_columns - s.Length, s.Length);
+			sb.Insert(m_columns - s.Length, s);
+			
 			m_statusLine = sb.ToString();
 		}
 

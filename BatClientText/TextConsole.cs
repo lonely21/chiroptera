@@ -9,6 +9,9 @@ namespace BatMud.BatClientText
 {
 	class TextConsole : IBatConsole
 	{
+		bool m_debugOutput = false;
+		bool m_256colors = true;
+		
 		public TextConsole()
 		{
 			Terminal.Load();
@@ -68,10 +71,13 @@ namespace BatMud.BatClientText
 			if (msg == null)
 				return;
 
-			string str = msg.ToAnsiString();
-			
-			Terminal.WriteLine("dbg: " + msg.ToDebugString());
-			Terminal.WriteLine("esc: " + str.Replace("\x1b", "<esc>"));
+			string str = msg.ToAnsiString(m_256colors);
+
+			if(m_debugOutput)
+			{
+				Terminal.WriteLine("dbg: " + msg.ToDebugString());
+				Terminal.WriteLine("esc: " + str.Replace("\x1b", "<esc>"));
+			}
 			
 			Terminal.WriteLine(str);
 		}
@@ -84,7 +90,7 @@ namespace BatMud.BatClientText
 			foreach (string line in lines)
 			{
 				ColorMessage msg = new ColorMessage(line);
-				Terminal.WriteLine(msg.ToAnsiString());
+				Terminal.WriteLine(msg.ToAnsiString(false));
 			}
 		}
 		

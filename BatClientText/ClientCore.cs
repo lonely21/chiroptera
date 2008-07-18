@@ -31,6 +31,8 @@ namespace BatMud.BatClientText
 		
 		bool m_pythonMode = false;
 		bool m_exit = false;
+		
+		bool m_debugReceive = false;
 
 		public ClientCore()
 		{
@@ -350,7 +352,8 @@ namespace BatMud.BatClientText
 			
 			foreach(string str in strs)
 			{
-				BatConsole.WriteLineLow("rcv: " + str.Replace("\x1b", "<esc>"));
+				if(m_debugReceive)
+					BatConsole.WriteLineLow("rcv: " + str.Replace("\x1b", "<esc>"));
 				
 				ColorMessage colorMsg = Ansi.ParseAnsi(str, ref m_currentStyle);
 				
