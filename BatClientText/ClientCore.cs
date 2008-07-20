@@ -189,39 +189,30 @@ namespace BatMud.BatClientText
 		{
 			m_exit = true;
 			Dbg.WriteLine("SIGINT");
-			//sigint.Reset();
 		}
 
 		void HandleSigWinch()
 		{
-			int w, h;
-			TermInfo.GetSize(out w, out h);
-			Dbg.WriteLine("SIGWINCH {0},{1}", w, h);
-			//sigwinch.Reset();
-			
-			m_textConsole.Reset();
-			GNUReadLine.rl_resize_terminal();
-			GNUReadLine.rl_reset_line_state();
+			m_textConsole.HandleSigWinch();
 		}
 		
 		void HandleSigTstp()
 		{
 			Dbg.WriteLine("SIGTSTP");
-			m_textConsole.RestoreNormal();
-			GNUReadLine.rl_cleanup_after_signal();
+			
+			m_textConsole.CleanupAfterSigStop();
+			
 			Stdlib.raise(Signum.SIGSTOP);
-			GNUReadLine.rl_reset_after_signal();
-			m_textConsole.Reset();
+
+			m_textConsole.RestoreAfterSigStop();
+			
 			Dbg.WriteLine("cont");
-			//sigtstp.Reset();
 		}
 		
 		public void Run()
 		{
-
 			Thread m_signalThread = new Thread(SignalThread);
 			m_signalThread.Start();
-			
 			
 			Pollfd[] fds = new Pollfd[2];
 			
@@ -235,7 +226,7 @@ namespace BatMud.BatClientText
 				fds[1].events = PollEvents.POLLIN;
 				fds[1].revents = 0;
 
-				int ret = Syscall.poll(fds, -1);
+				int ret = Syscall.poll(fds, 500);
 
 				if(ret == 0)
 				{

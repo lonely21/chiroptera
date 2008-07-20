@@ -2,11 +2,14 @@
   <Configurations active="Debug">
     <Configuration name="Debug" SourceDirectory="." ctype="CProjectConfiguration">
       <CustomCommands>
-        <Command type="AfterBuild" command="cp -f bin/Debug/libbatclient.so ../BatClientText/bin/Debug/" />
+        <Command type="AfterBuild" command="cp -fu bin/Debug/libbatclient.so ../BatClientText/bin/Debug/" />
       </CustomCommands>
       <Output directory="bin/Debug" output="libbatclient" />
       <Build debugmode="True" target="SharedLibrary" />
       <Execution runwithwarnings="True" consolepause="True" />
+      <Libs>
+        <Lib>ncurses</Lib>
+      </Libs>
       <CodeGeneration WarningLevel="Normal" WarningsAsErrors="False" OptimizationLevel="0" ExtraCompilerArguments="" ExtraLinkerArguments="" DefineSymbols="DEBUG MONODEVELOP" ctype="CCompilationParameters" />
     </Configuration>
     <Configuration name="Release" ctype="CProjectConfiguration">

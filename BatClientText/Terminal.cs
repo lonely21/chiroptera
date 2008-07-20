@@ -2,11 +2,17 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using BatMud.BatClientText.Term;
 
 namespace BatMud.BatClientText
 {
 	public static class Dbg
 	{
+		static Dbg()
+		{
+			System.IO.File.AppendAllText("dbg.log", "\n\n** START **\n");
+		}
+		
 		public static void WriteLine(string format, params object[] args)
 		{
 			string str = String.Format(format, args);
@@ -15,7 +21,11 @@ namespace BatMud.BatClientText
 		}
 	}
 
-	public class Terminal
+	/*
+	 * Terminal uses TermInfo and GNUReadline to handle the term
+	 */
+	
+	public static class Terminal
 	{
 		static string m_prompt = "";
 
@@ -30,46 +40,122 @@ namespace BatMud.BatClientText
 		static bool m_initialized = false;
 		
 		static string s_lastLine;
-		
+
+		static Queue<string> s_textQueue = new Queue<string>();
+
+		static void D(string format, params object[] args)
+		{
+			Dbg.WriteLine("Terminal: " + format, args); 
+		}
+
 		public static void Init()
 		{
+			D("Init");
+			
+			if(m_initialized)
+				throw new Exception("Terminal already initailized");
+
+			GNUReadLine.rl_initialize();
 			GNUReadLine.rl_clear_signals();
 			GNUReadLine.mono_rl_set_catch_signals(false);
+			GNUReadLine.rl_set_signals();
+			GNUReadLine.using_history();
 			GNUReadLine.stifle_history(100);
 
 			GNUReadLine.rl_bind_key(12, ClearScreenHandler);
 			
-			Reset();
+			TermInfo.Init(m_visualMode);
+			
+			Redraw();
 
 			GNUReadLine.rl_callback_handler_install("", InputHandler);
-			
+
+			Load();
+
+			Prompt = "XX> ";
+
 			m_initialized = true;
 		}
 		
 		public static void UnInit()
 		{
-			if(m_initialized)
+			D("UnInit");
+			
+			if(!m_initialized)
 			{
-				GNUReadLine.rl_callback_handler_remove();
-				TermInfo.UnInit(m_visualMode);
-				m_initialized = false;
+				Dbg.WriteLine("WARNING Terminal not initialized");
+				return;
 			}
+			
+			GNUReadLine.rl_callback_handler_remove();
+			TermInfo.UnInit();
+			m_initialized = false;
 			
 			Save();
 		}
 		
-		public static void Load()
+		static void Load()
 		{
 			GNUReadLine.read_history(System.IO.Path.Combine(Program.ConfigPath, "history"));
+			int l = GNUReadLine.mono_history_get_length();
+			if(l > 0)
+			{
+				GNUReadLine.history_set_pos(l);
+				
+				IntPtr strptr = GNUReadLine.mono_history_get(l);
+				int i = 0;
+				while(System.Runtime.InteropServices.Marshal.ReadByte(strptr, i) != (byte)0)
+					++i;
+				byte[] buf = new byte [i];
+				System.Runtime.InteropServices.Marshal.Copy(strptr, buf, 0, buf.Length);
+				string str = System.Text.Encoding.Default.GetString (buf);
+				
+				s_lastLine = str;
+				Dbg.WriteLine("lastline was '{0}'", str);
+			}
 		}
 		
 		static void Save()
 		{
 			GNUReadLine.write_history(System.IO.Path.Combine(Program.ConfigPath, "history"));
 		}
+		
+		public static void Redraw()
+		{
+			TermInfo.GetSize(out m_columns, out m_lines);
+
+			if(m_visualMode)
+			{
+				TermInfo.Clear();
+			
+				RedrawStatusLine();
+				
+				//TermInfo.SetScrollRegion(m_lines - m_editLines, m_lines);
+				
+				// move to top of input area
+				TermInfo.MoveCursor(m_lines - m_editLines, 0);
+
+				GNUReadLine.rl_on_new_line();
+			}
+			
+			GNUReadLine.rl_resize_terminal();
+		}
+		
+		public static void RedrawStatusLine()
+		{
+			if(m_visualMode)
+			{
+				CreateStatusLine();
+				// move to status line
+				TermInfo.MoveCursor(m_lines - m_editLines - 1, 0);
+				Console.Write(m_statusLine);
+			}
+		}
 
 		public static void Reset()
 		{
+			D("Reset");
+			
 			TermInfo.Init(m_visualMode);
 
 			if(m_visualMode)
@@ -87,7 +173,36 @@ namespace BatMud.BatClientText
 
 			GNUReadLine.rl_forced_update_display();
 		}
+		
+		public static void RestoreNormal()
+		{
+			D("RestoreNormal");
+			if(m_visualMode)
+			{
+				TermInfo.SetScrollRegion(0, m_lines);
+				TermInfo.Clear();
+			}
+			//TermInfo.UnInit();
+		}
 
+		public static void CleanupAfterSigStop()
+		{
+			D("CleanupAfterSigStop");
+			RestoreNormal();
+			GNUReadLine.rl_cleanup_after_signal();
+		}
+		
+		public static void RestoreAfterSigStop()
+		{
+			D("RestoreAfterSigStop");
+			GNUReadLine.rl_reset_after_signal();
+			Redraw();
+		}
+
+		public static void OnScreenResize()
+		{
+			Redraw();
+		}
 
 		static void CreateStatusLine()
 		{
@@ -97,16 +212,11 @@ namespace BatMud.BatClientText
 			sb.Remove(10, s.Length);
 			sb.Insert(10, s);
 
-			s = DateTime.Now.ToShortTimeString();
+			s = DateTime.Now.Ticks.ToString();
 			sb.Remove(m_columns - s.Length, s.Length);
 			sb.Insert(m_columns - s.Length, s);
 			
 			m_statusLine = sb.ToString();
-		}
-
-		public static void RestoreNormal()
-		{
-			TermInfo.UnInit(m_visualMode);
 		}
 
 		static void SetOutputMode()
@@ -124,12 +234,10 @@ namespace BatMud.BatClientText
 
 		static int ClearScreenHandler(int x, int keycode)
 		{
-			Reset();
+			Redraw();
 			return 0;
 		}
 		
-		static Queue<string> s_textQueue = new Queue<string>();
-
 		public static string Pop()
 		{
 			if(s_textQueue.Count == 0)
@@ -140,7 +248,7 @@ namespace BatMud.BatClientText
 
 		static void InputHandler(IntPtr strptr)
 		{
-			Dbg.WriteLine("Native {0}", strptr);
+			//Dbg.WriteLine("Native {0}", strptr);
 
 			//Encoding m_encoding = Encoding.GetEncoding("ISO-8859-1");
 
@@ -152,20 +260,22 @@ namespace BatMud.BatClientText
 			int i = 0;
 			while(System.Runtime.InteropServices.Marshal.ReadByte(strptr, i) != (byte)0)
 				++i;
-			Dbg.WriteLine("{0} bytes", i);
+			//Dbg.WriteLine("{0} bytes", i);
 			byte[] buf = new byte [i];
 			System.Runtime.InteropServices.Marshal.Copy(strptr, buf, 0, buf.Length);
 			str = System.Text.Encoding.Default.GetString (buf);
 			//str = m_encoding.GetString(buf);
 
 
-			Dbg.WriteLine("Tuli: '{0}'", str == null ? "<null>" : str);
+			//Dbg.WriteLine("Tuli: '{0}'", str == null ? "<null>" : str);
 
 			if(str == null)
 				return;
 
 			if(str.Length > 0 && str != s_lastLine)
 				GNUReadLine.add_history(str);
+			else
+				Dbg.WriteLine("skipping {0}", str);
 
 			s_lastLine = str;
 			
@@ -176,29 +286,6 @@ namespace BatMud.BatClientText
 		{
 			//Dbg.WriteLine("ReadInput");
 			GNUReadLine.rl_callback_read_char();
-		}
-
-		public static void SigWinchHandler()
-		{
-			Reset();
-			GNUReadLine.rl_resize_terminal();
-			//GNUReadLine.rl_reset_line_state();
-		}
-
-
-		public static void SigStopHandler()
-		{
-			Dbg.WriteLine("STOP");
-			//RestoreNormal();
-		}
-
-		public static void SigContHandler()
-		{
-			Dbg.WriteLine("CONT");
-			/*return;
-			Reset();
-			GNUReadLine.rl_resize_terminal();
-			GNUReadLine.rl_reset_line_state();*/
 		}
 
 		public static string Prompt
@@ -235,18 +322,15 @@ namespace BatMud.BatClientText
 			}
 		}
 		
-		public static void WriteLine(string format, params object[] args)
+		public static void WriteLine(string str)
 		{
-			if (m_visualMode)
-				SetOutputMode();
-
-			string str = String.Format(format, args);
-			
 			if(m_visualMode)
 			{
-				// Move to next line
+				SetOutputMode();
+				// Move to next line (and possibly scroll the screen)
 				Console.WriteLine();
 				Console.Write(str);
+				SetInputMode();
 			}
 			else
 			{
@@ -256,11 +340,7 @@ namespace BatMud.BatClientText
 				
 				GNUReadLine.rl_on_new_line();
 				GNUReadLine.mono_rl_restore();
-				//GNUReadLine.rl_redisplay();
 			}
-
-			if (m_visualMode)
-				SetInputMode();
 		}
 	}
 }

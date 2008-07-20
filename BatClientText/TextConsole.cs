@@ -14,15 +14,9 @@ namespace BatMud.BatClientText
 		
 		public TextConsole()
 		{
-			Terminal.Load();
 			Terminal.Init();
 		}
 
-		public void Init()
-		{
-			Terminal.Init();
-		}
-		
 		public void UnInit()
 		{
 			Terminal.UnInit();
@@ -46,6 +40,21 @@ namespace BatMud.BatClientText
 		public string GetLine()
 		{
 			return Terminal.Pop();
+		}
+		
+		public void HandleSigWinch()
+		{
+			Terminal.OnScreenResize();
+		}
+
+		public void CleanupAfterSigStop()
+		{
+			Terminal.CleanupAfterSigStop();
+		}
+		
+		public void RestoreAfterSigStop()
+		{
+			Terminal.RestoreAfterSigStop();
 		}
 
 		#region IBatConsole Members

@@ -72,7 +72,7 @@ Hilites pattern with specified color. Options:
 	-i                      Ignore case
 """)
 
-testmode = 1
+testmode = 0
 if testmode and BatMud.BatClientBase.PythonInterface.IsDebug():
 	from batclient import *
 

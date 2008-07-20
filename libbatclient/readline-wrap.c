@@ -68,3 +68,16 @@ void mono_rl_restore()
 	rl_end = saved_end;
 	rl_redisplay();
 }
+
+int mono_history_get_length()
+{
+	return history_length;
+}
+
+const char *mono_history_get(int offset)
+{
+	HIST_ENTRY* entry = history_get(offset);
+	
+	return entry->line;
+}
+
