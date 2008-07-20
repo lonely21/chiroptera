@@ -96,8 +96,28 @@ namespace BatMud.BatClientBase
 
 			if (!m_commandMap.ContainsKey(cmd))
 			{
-				BatConsole.WriteLine("Unknown command {0}", cmd);
-				return -1;
+				List<string> l = new List<string>();
+				
+				foreach(string c in m_commandMap.Keys)
+				{
+					if(c.StartsWith(cmd))
+						l.Add(c);
+				}
+				
+				if(l.Count == 0)
+				{
+					BatConsole.WriteLine("Unknown command {0}", cmd);
+					return -1;
+				}
+				else if(l.Count > 1)
+				{
+					BatConsole.WriteLine("Ambigious command. ({0})", String.Join(", ", l.ToArray()));
+					return -1;
+				}
+				else
+				{
+					cmd = l[0];
+				}
 			}
 
 			CommandData cmdData = m_commandMap[cmd];

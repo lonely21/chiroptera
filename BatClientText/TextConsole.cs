@@ -27,11 +27,6 @@ namespace BatMud.BatClientText
 			Terminal.Reset();
 		}
 
-		public void RestoreNormal()
-		{
-			Terminal.RestoreNormal();
-		}
-		
 		public void ReadChars()
 		{
 			Terminal.ReadInput();

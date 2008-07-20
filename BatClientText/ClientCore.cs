@@ -226,7 +226,7 @@ namespace BatMud.BatClientText
 				fds[1].events = PollEvents.POLLIN;
 				fds[1].revents = 0;
 
-				int ret = Syscall.poll(fds, 500);
+				int ret = Syscall.poll(fds, -1);
 
 				if(ret == 0)
 				{

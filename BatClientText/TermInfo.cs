@@ -99,10 +99,11 @@ namespace BatMud.BatClientText.Term
 		{
 			D("Clear");
 			if(s_fullScreen)
+			{
 				Console.Write(TGetStr("rmcup"));
-			Console.Write(TermInfo.TGetStr("cl"));
-			if(s_fullScreen)
+				Console.Write(TermInfo.TGetStr("cl"));
 				Console.Write(TGetStr("smcup"));
+			}
 		}
 
 		static public bool GetSize(out int width, out int height)

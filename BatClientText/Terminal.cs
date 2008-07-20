@@ -130,8 +130,6 @@ namespace BatMud.BatClientText
 			
 				RedrawStatusLine();
 				
-				//TermInfo.SetScrollRegion(m_lines - m_editLines, m_lines);
-				
 				// move to top of input area
 				TermInfo.MoveCursor(m_lines - m_editLines, 0);
 
@@ -174,21 +172,16 @@ namespace BatMud.BatClientText
 			GNUReadLine.rl_forced_update_display();
 		}
 		
-		public static void RestoreNormal()
+		public static void CleanupAfterSigStop()
 		{
-			D("RestoreNormal");
+			D("CleanupAfterSigStop");
+			
 			if(m_visualMode)
 			{
 				TermInfo.SetScrollRegion(0, m_lines);
 				TermInfo.Clear();
 			}
-			//TermInfo.UnInit();
-		}
-
-		public static void CleanupAfterSigStop()
-		{
-			D("CleanupAfterSigStop");
-			RestoreNormal();
+			
 			GNUReadLine.rl_cleanup_after_signal();
 		}
 		
