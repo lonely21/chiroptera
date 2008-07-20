@@ -72,8 +72,6 @@ namespace BatMud.BatClientText
 
 			Load();
 
-			Prompt = "XX> ";
-
 			m_initialized = true;
 		}
 		

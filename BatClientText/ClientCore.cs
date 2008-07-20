@@ -93,6 +93,9 @@ namespace BatMud.BatClientText
 
 			// run init script
 
+			Version currentVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+			Version baseVersion = System.Reflection.Assembly.GetAssembly(typeof(Telnet)).GetName().Version;
+			BatConsole.WriteLine("BatClientText version {0} (base {1})", currentVersion, baseVersion);
 			BatConsole.WriteLine("Using {0}", PythonEngine.VersionString);
 						
 			try

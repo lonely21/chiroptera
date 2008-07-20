@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("BatMUD Client")]
-[assembly: AssemblyCopyright("Copyright © 2007 Tomi Valkeinen")]
+[assembly: AssemblyCopyright("Copyright © 2008 Tomi Valkeinen")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
