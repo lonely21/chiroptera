@@ -27,7 +27,7 @@ def colorize(str, fg, bg=None):
 		else:
 			bg = C.Empty
 		
-	str = BatMud.BatClientBase.ControlCodes.ColorizeString(str, fg, bg)
+	str = BatMud.BatClientBase.Ansi.ColorizeString(str, fg, bg)
 	return str
 
 def send(str):

@@ -9,8 +9,8 @@ namespace BatMud.BatClientText
 {
 	class TextConsole : IBatConsole
 	{
-		bool m_debugOutput = false;
-		bool m_256colors = true;
+		bool m_debugOutput = true;
+		bool m_256colors = false;
 		
 		public TextConsole()
 		{
@@ -57,9 +57,10 @@ namespace BatMud.BatClientText
 		public void WriteLine(string str)
 		{
 			string[] lines = str.Split(new string[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+			TextStyle style = new TextStyle();
 			foreach (string line in lines)
 			{
-				ColorMessage msg = new ColorMessage(line);
+				ColorMessage msg = ColorMessage.CreateFromAnsi(line, style);
 				WriteLine(msg);
 			}
 		}
@@ -91,9 +92,10 @@ namespace BatMud.BatClientText
 			string str = String.Format(format, args);
 
 			string[] lines = str.Split(new string[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+			TextStyle style = new TextStyle();
 			foreach (string line in lines)
 			{
-				ColorMessage msg = new ColorMessage(line);
+				ColorMessage msg = ColorMessage.CreateFromAnsi(line, style);
 				Terminal.WriteLine(msg.ToAnsiString(false));
 			}
 		}

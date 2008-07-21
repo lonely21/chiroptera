@@ -368,7 +368,8 @@ namespace BatMud.BatClientText
 
 		void PromptEvent(string data)
 		{
-			ColorMessage colorMsg = new ColorMessage(data);
+			TextStyle dummy = new TextStyle();
+			ColorMessage colorMsg = ColorMessage.CreateFromAnsi(data, dummy);
 
 			colorMsg = m_baseServicesDispatcher.DispatchPromptEvent(colorMsg);
 

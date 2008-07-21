@@ -45,17 +45,18 @@ namespace BatMud.BatClientBase
 		StringBuilder m_text;
 		List<MetaData> m_metaData;
 
-		public ColorMessage(string text)
-		{
-			SetText(text);
-		}
-
 		public ColorMessage(string text, List<MetaData> metadata)
 		{
 			m_text = new StringBuilder(text);
 			m_metaData = metadata;
 
 			Validate();
+		}
+		
+		public static ColorMessage CreateFromAnsi(string str, TextStyle lastStyle)
+		{
+			ColorMessage colorMsg = Ansi.ParseAnsi(str, ref lastStyle);
+			return colorMsg;
 		}
 
 		public void SetText(string text)

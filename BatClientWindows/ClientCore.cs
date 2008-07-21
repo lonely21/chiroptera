@@ -332,7 +332,8 @@ namespace BatMud.BatClientWindows
 
 		void PromptEvent(string data)
 		{
-			ColorMessage colorMsg = new ColorMessage(data);
+			TextStyle dummy = new TextStyle();
+			ColorMessage colorMsg = ColorMessage.CreateFromAnsi(data, dummy);
 
 			colorMsg = m_baseServicesDispatcher.DispatchPromptEvent(colorMsg);
 
@@ -490,9 +491,10 @@ namespace BatMud.BatClientWindows
 		public void WriteLine(string str)
 		{
 			string[] lines = str.Split(new string[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+			TextStyle style = new TextStyle();
 			foreach (string line in lines)
 			{
-				ColorMessage msg = new ColorMessage(line);
+				ColorMessage msg = ColorMessage.CreateFromAnsi(line, style);
 				WriteLine(msg);
 			}
 		}
@@ -529,9 +531,10 @@ namespace BatMud.BatClientWindows
 			string str = String.Format(format, args);
 
 			string[] lines = str.Split(new string[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+			TextStyle style = new TextStyle();
 			foreach (string line in lines)
 			{
-				ColorMessage msg = new ColorMessage(line);
+				ColorMessage msg = ColorMessage.CreateFromAnsi(line, style);
 				m_paragraphContainer.Add(new Paragraph(msg));
 			}
 		}

@@ -43,8 +43,8 @@ receive("\x1b[32mkala\x1b[33mkissa\x1b[32;45mkoka")
 
 receive("pla\x1b[0m")
 
-#write("joo" + colorize("KALA", "red", "blue") + "pajoo")
+write("joo" + colorize("KALA", "orange", "green") + "pajoo")
 
 write("nomoi")
 
-receive(create256())
+#receive(create256())

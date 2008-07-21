@@ -61,6 +61,8 @@ namespace BatMud.BatClientBase
 {
 	public class Ansi
 	{
+		const char ESC = '\x1b';
+		
 		public enum AnsiColor
 		{
 			None    = -1,
@@ -245,8 +247,6 @@ namespace BatMud.BatClientBase
 
 		public static ColorMessage ParseAnsi(string text, ref TextStyle currentStyle)
 		{
-			const char ESC = '\x1b';
-
 			StringBuilder stringBuilder = new StringBuilder(text.Length);
 			List<ColorMessage.MetaData> metaData = new List<ColorMessage.MetaData>();
 
@@ -381,6 +381,7 @@ namespace BatMud.BatClientBase
 									fgColor = Ansi.AnsiColor8ToColor(num - 30, false);
 									break;
 								
+									// 38;5;c
 								case 38:
 									if(arr.Length != 3 || i != 0 || arr[1] != "5")
 									{
@@ -501,5 +502,29 @@ namespace BatMud.BatClientBase
 */
 			return new ColorMessage(stringBuilder.ToString(), metaData);
 		}
+
+		static public string ColorizeString(string str, Color foreground, Color background)
+		{
+			int fg = ColorToAnsiColor256(foreground);
+			int bg = ColorToAnsiColor256(background);
+			
+			StringBuilder sb = new StringBuilder();
+
+			if (!foreground.IsEmpty)
+			{
+				sb.AppendFormat("\x1b[38;5;{0}m", fg);
+			}
+			
+			if (!background.IsEmpty)
+			{
+				sb.AppendFormat("\x1b[48;5;{0}m", bg);
+			}
+			
+			sb.Append(str);
+			
+			sb.Append("\x1b[0m");
+			
+			return sb.ToString();
+		}	
 	}
 }
