@@ -147,7 +147,7 @@ namespace BatMud.BatClientText.Term
 
 		static public void MoveCursor(int row, int col)
 		{
-			D("MoveCursor({0},{1})", row, col);
+			//D("MoveCursor({0},{1})", row, col);
 			Console.Write(TParm(TGetStr("cup"), row, col));
 		}
 

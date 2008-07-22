@@ -3,6 +3,7 @@
     <Configuration name="Debug" SourceDirectory="." ctype="CProjectConfiguration">
       <CustomCommands>
         <Command type="AfterBuild" command="cp -fu bin/Debug/libbatclient.so ../BatClientText/bin/Debug/" />
+        <Command type="AfterClean" command="rm -f ../BatClientText/bin/Debug/libbatclient.so" />
       </CustomCommands>
       <Output directory="bin/Debug" output="libbatclient" />
       <Build debugmode="True" target="SharedLibrary" />
