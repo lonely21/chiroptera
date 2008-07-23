@@ -80,4 +80,3 @@ const char *mono_history_get(int offset)
 	
 	return entry->line;
 }
-

@@ -138,7 +138,7 @@ namespace BatMud.BatClientText
 			else
 				esb.Append("27");
 			esb.Append('m');
-			
+
 			if(!style.Fg.IsEmpty)
 			{
 				if(style.Fg.IsDefault)
@@ -181,8 +181,9 @@ namespace BatMud.BatClientText
 		
 		public string ToAnsiString(bool use256, int startIndex, int length)
 		{
+#if DEBUG
 			StringBuilder sb = new StringBuilder();
-
+			
 			int i = 0;
 			TextStyle currentStyle = null;
 			int currentIndex = startIndex;
@@ -193,7 +194,7 @@ namespace BatMud.BatClientText
 				i++;
 			}
 			
-			while (i < m_meta.Length && m_meta[i].m_index < startIndex + length)
+			while (i < m_meta.Length && m_meta[i].m_index <= startIndex + length)
 			{
 				if(currentStyle != null)
 					sb.Append(StyleToAnsi(use256, currentStyle));
@@ -204,11 +205,13 @@ namespace BatMud.BatClientText
 				currentIndex = m_meta[i].m_index;
 				i++;
 			}
-
+			
+			if(currentStyle != null)
+				sb.Append(StyleToAnsi(use256, currentStyle));
+			
 			sb.Append(m_text, currentIndex, length - (currentIndex - startIndex));
-			
-			
-/*
+#else	// old version
+			StringBuilder sb = new StringBuilder(m_text);
 			for (int i = m_meta.Length - 1; i >= 0; i--)
 			{
 				ColorMessage.MetaData md = m_meta[i];
@@ -226,7 +229,7 @@ namespace BatMud.BatClientText
 
 			if(m_meta.Length > 0)
 				sb.Append(String.Format("{0}[0m", ESC));
-			*/
+#endif
 			return sb.ToString();
 		}
 		

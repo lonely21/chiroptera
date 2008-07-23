@@ -21,7 +21,7 @@ namespace BatMud.BatClientText.Term
 		
 		[DllImport("libncurses", CallingConvention = CallingConvention.Cdecl)]
 			extern static IntPtr tparm(string cap, int p1, int p2);
-
+		
 		
 		static bool m_initialized = false;
 		static bool s_fullScreen;
@@ -106,11 +106,7 @@ namespace BatMud.BatClientText.Term
 		{
 			D("Clear");
 			if(s_fullScreen)
-			{
-				Console.Write(TGetStr("rmcup"));
-				Console.Write(TermInfo.TGetStr("cl"));
-				Console.Write(TGetStr("smcup"));
-			}
+				Console.Write(TermInfo.TGetStr("clear"));
 		}
 
 		static public bool GetSize(out int width, out int height)
