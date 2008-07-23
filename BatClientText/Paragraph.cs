@@ -125,20 +125,25 @@ namespace BatMud.BatClientText
 			
 			esb.Append(ESC);
 			esb.Append('[');
+			esb.Append('0');
+			esb.Append('m');
+			
 			if(style.IsHighIntensity)
+			{
+				esb.Append(ESC);
+				esb.Append('[');
 				esb.Append('1');
-			else
-				esb.Append("22");
-			esb.Append('m');
+				esb.Append('m');
+			}
 
-			esb.Append(ESC);
-			esb.Append('[');
 			if(style.IsReverse)
+			{
+				esb.Append(ESC);
+				esb.Append('[');
 				esb.Append('7');
-			else
-				esb.Append("27");
-			esb.Append('m');
-
+				esb.Append('m');
+			}
+			
 			if(!style.Fg.IsEmpty)
 			{
 				if(style.Fg.IsDefault)
