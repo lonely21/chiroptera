@@ -27,10 +27,19 @@ namespace BatMud.BatClientWindows
 			return p;
 		}
 
+		int GetLinesForParagraph(Paragraph paragraph)
+		{
+			int l = paragraph.m_text.Length / m_columns;
+			if(paragraph.m_text.Length % m_columns == 0)
+				l -= 1;
+			l += 1;
+			return l;
+		}
+		
 		public Paragraph Add(Paragraph paragraph)
 		{
 			m_paragraphList.Add(paragraph);
-			paragraph.m_lines = paragraph.m_text.Length / (m_columns + 1) + 1;
+			paragraph.m_lines = GetLinesForParagraph(paragraph);
 
 			bool historyFull = false;
 
@@ -68,7 +77,7 @@ namespace BatMud.BatClientWindows
 
 			for(int i = 0; i < m_paragraphList.Count; i++)
 			{
-				int lines = m_paragraphList[i].m_text.Length / (m_columns + 1) + 1;
+				int lines = GetLinesForParagraph(m_paragraphList[i]);
 				m_paragraphList[i].m_lines = lines;
 			}
 		}

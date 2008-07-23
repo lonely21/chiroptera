@@ -26,9 +26,16 @@ namespace BatMud.BatClientText.Term
 		static bool m_initialized = false;
 		static bool s_fullScreen;
 		
+#if DEBUG
+		static bool s_printDebug = false;
+#endif
+		
 		static void D(string format, params object[] args)
 		{
-			Dbg.WriteLine("TermInfo: " + format, args); 
+#if DEBUG
+			if(s_printDebug)
+#endif
+			Dbg.WriteLine("TermInfo: " + format, args);
 		}
 
 		static public void Init(bool fullScreen)

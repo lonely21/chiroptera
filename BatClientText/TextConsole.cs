@@ -10,7 +10,7 @@ namespace BatMud.BatClientText
 {
 	class TextConsole : IBatConsole
 	{
-		bool m_256colors = false;
+		bool m_256colors = true;
 		ParagraphContainer m_paragraphContainer;
 		bool m_showOutputDebug = false;
 		bool m_escapeOutput = false;
@@ -20,9 +20,9 @@ namespace BatMud.BatClientText
 
 		string m_lastLine;
 
-		int m_lines = 25;
+		int m_lines = 0;
 		int m_outputLines; // m_lines - m_editLines - 1
-		int m_columns = 80;
+		int m_columns = 0;
 		int m_editLines = 4;
 		int m_currentLine = 0;
 
@@ -81,7 +81,8 @@ namespace BatMud.BatClientText
 			m_initialized = true;
 			
 			for(int i = 0; i < 200; i++)
-				m_paragraphContainer.Add(String.Format("kala {0}", i));
+				m_paragraphContainer.Add(String.Format("kala {0} 1234567890 abcdefg hijklmn opqrstu vxyz 1234567890 abcdefg hijklmn opqrstu vxyz foobar {1}", 
+				                                       i, i));
 		}
 		
 		void ParagraphAdded(bool historyFull)
@@ -133,20 +134,26 @@ namespace BatMud.BatClientText
 			StringBuilder sb = new StringBuilder(new String('_', m_columns));
 
 			string s = String.Format("{0}x{1}({2})", m_columns, m_lines, m_outputLines);
-			sb.Remove(2, s.Length);
-			sb.Insert(2, s);
+			InsertStatusLineItem(sb, s, 2);
 
 			s = DateTime.Now.Ticks.ToString();
-			sb.Remove(m_columns - s.Length, s.Length);
-			sb.Insert(m_columns - s.Length, s);
+			InsertStatusLineItem(sb, s, Math.Max(m_columns - s.Length, 0));
 
 			s = String.Format("{0}/{1}", m_currentLine, m_paragraphContainer.TotalLines);
-			sb.Remove(20, s.Length);
-			sb.Insert(20, s);
+			InsertStatusLineItem(sb, s, 20);
 			
 			m_statusLine = sb.ToString();
 		}
-
+		
+		void InsertStatusLineItem(StringBuilder statusLine, string str, int pos)
+		{
+			if(pos + str.Length > statusLine.Length)
+				return;
+			
+			statusLine.Remove(pos, str.Length);
+			statusLine.Insert(pos, str);
+		}
+		
 		static int ClearScreenHandler(int x, int keycode)
 		{
 			s_textConsole.Redraw();
@@ -223,7 +230,7 @@ namespace BatMud.BatClientText
 			TermInfo.GetSize(out columns, out lines);
 
 			if(columns != m_columns)
-				m_paragraphContainer.SetColumns(m_columns);
+				m_paragraphContainer.SetColumns(columns);
 
 			m_columns = columns;
 			m_lines = lines;
@@ -293,8 +300,24 @@ namespace BatMud.BatClientText
 
 			Dbg.WriteLine("upmost paragraph {0}", p);
 			
-			// xxx partial paragraph
 			l = m_outputLines - l;
+
+			if(l < 0)
+			{
+				// top paragraph is partial
+				int start = Math.Abs(l) * m_columns;
+				Paragraph para = m_paragraphContainer[p];
+				string str = para.ToAnsiString(m_256colors, start, para.m_text.Length - start);
+				Dbg.WriteLine("topmost ({1},{2}) '{0}'", str, start, para.m_text.Length - start);
+
+				TermInfo.MoveCursor(0, 0);
+				Console.Write(str);
+				
+				l = m_paragraphContainer[p].m_lines - Math.Abs(l);
+				
+				p++;
+			}
+			
 			
 			Dbg.WriteLine("starting to draw from line {0}, para {1}", l, p);
 			
@@ -309,7 +332,7 @@ namespace BatMud.BatClientText
 				if(l >= m_outputLines)
 					break;
 			}
-			
+
 			SetInputMode();
 		}
 		
