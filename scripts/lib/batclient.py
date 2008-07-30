@@ -3,6 +3,8 @@
 import BatMud.BatClientBase
 import System.Drawing
 
+__all__ = ('colorize', 'send', 'write', 'isconnected', 'receive', 'isdebug', 'run', 'addcommand', 'removecommand', 'getopts',)
+
 # Global helper variables
 
 Bat = BatMud.BatClientBase.PythonInterface

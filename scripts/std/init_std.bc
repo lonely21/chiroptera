@@ -1,5 +1,5 @@
 # import these, so that trigger scripts can use them
-/eval import batclient
+/eval from batclient import *
 
 /run basic
 /run triggers

@@ -398,6 +398,13 @@ namespace BatMud.BatClientWindows
 				}
 			}
 
+			if (input.Length > 1 && input.StartsWith("\\"))
+			{
+				input = input.Substring(1);
+				EvalCommandHandler(input);
+				return;
+			}
+
 			input = m_baseServicesDispatcher.DispatchInputEvent(input);
 
 			if (input == null)
