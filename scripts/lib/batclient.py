@@ -36,6 +36,15 @@ def send(str):
 	Net.SendLine(str)
 	
 def write(str, *args):
+	"""Writes text to screen.
+	
+	str - string to be printed
+	args - formatting args
+	
+	Examples:
+    write("foobar")
+    write("foo {0} bar {1}", 123, "pla")
+	"""
 	Console.WriteLine(str, *args)
 
 def isconnected():
