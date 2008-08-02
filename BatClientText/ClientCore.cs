@@ -6,8 +6,8 @@ using System.Threading;
 using BatMud.BatClientBase;
 using IronPython.Hosting;
 using IronPython.Runtime;
-using Mono.Unix;
-using Mono.Unix.Native;
+//using Mono.Unix;
+//using Mono.Unix.Native;
 
 namespace BatMud.BatClientText
 {

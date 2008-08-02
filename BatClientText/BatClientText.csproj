@@ -55,9 +55,12 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssemblyInfo.cs" />
     <Compile Include="ClientCore.cs" />
+    <Compile Include="Dbg.cs" />
+    <Compile Include="Paragraph.cs" />
+    <Compile Include="ParagraphContainer.cs" />
     <Compile Include="SynchronizedInvoke.cs" />
-    <Compile Include="Terminal.cs" />
     <Compile Include="TermInfo.cs" />
     <Compile Include="TextConsole.cs" />
     <Compile Include="GNUReadLine.cs" />
@@ -69,9 +72,6 @@
       <Project>{C31F660E-90FF-4D5D-90E4-04E7FF24EF08}</Project>
       <Name>BatClientBase</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Makefile" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
