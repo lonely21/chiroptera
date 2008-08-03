@@ -247,6 +247,7 @@ namespace BatMud.BatClientBase
 			get { return m_text.Length; }
 		}
 
+#if ASDAS
 		public string ToAnsiString(bool use256)
 		{
 			StringBuilder sb = new StringBuilder(m_text.ToString());
@@ -365,12 +366,13 @@ namespace BatMud.BatClientBase
 				
 				sb.Insert(md.m_index, esb.ToString());
 			}
-
+			
 			if(m_metaData.Count > 0)
-				sb.Append(String.Format("{0}[0m", ESC));
+				sb.Append(String.Format("RESET{0}[0m", ESC));
 			
 			return sb.ToString();
 		}
+#endif
 		
 		public string ToDebugString()
 		{

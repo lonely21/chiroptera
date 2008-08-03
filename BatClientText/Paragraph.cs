@@ -215,6 +215,10 @@ namespace BatMud.BatClientText
 				sb.Append(StyleToAnsi(use256, currentStyle));
 			
 			sb.Append(m_text, currentIndex, length - (currentIndex - startIndex));
+			
+			if(currentStyle != null)
+				sb.Append(String.Format("{0}[0m", ESC));
+
 #else	// old version
 			StringBuilder sb = new StringBuilder(m_text);
 			for (int i = m_meta.Length - 1; i >= 0; i--)
