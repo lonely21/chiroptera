@@ -58,7 +58,8 @@ namespace BatMud.BatClientWindows
 
 			if (base.Text.Length > 0)
 			{
-				if (base.PasswordChar == (char)0)
+				if ((m_stringList.Count < 2 || m_stringList[m_stringList.Count - 2] != base.Text) &&
+					base.PasswordChar == (char)0)
 				{
 					m_stringList[m_stringList.Count - 1] = base.Text;
 					m_stringList.Add("");

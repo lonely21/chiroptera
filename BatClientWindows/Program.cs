@@ -8,7 +8,6 @@ using BatMud.BatClientBase;
 
 // Courier new fontti: underlinet scrollaa v‰‰rin
 // paste remove linefeeds optio menuihin
-// copy-v‰ritys v‰lkkyy
 // copy-v‰ritys pois klikkaamalla
 
 namespace BatMud.BatClientWindows
