@@ -69,6 +69,8 @@ namespace BatMud.BatClientText
 			GNUReadLine.rl_bind_key(12, ClearScreenHandler);
 			GNUReadLine.rl_bind_keyseq("\x1b[6~", PageDownHandler);
 			GNUReadLine.rl_bind_keyseq("\x1b[5~", PageUpHandler);
+			GNUReadLine.rl_bind_keyseq("\x1b[6;5~", PageDownCtrlHandler);
+			GNUReadLine.rl_bind_keyseq("\x1b[5;5~", PageUpCtrlHandler);
 			
 			TermInfo.Init(m_visualMode);
 			
@@ -162,26 +164,46 @@ namespace BatMud.BatClientText
 
 		static int PageUpHandler(int x, int keycode)
 		{
-			s_textConsole.m_currentLine += 10;
-			
-			if(s_textConsole.m_currentLine >= s_textConsole.m_paragraphContainer.TotalLines)
-				s_textConsole.m_currentLine = s_textConsole.m_paragraphContainer.TotalLines - 1;
-			
-			s_textConsole.Redraw();
-			
+			ScrollUp(1);			
 			return 0;
 		}
 		
 		static int PageDownHandler(int x, int keycode)
 		{
-			s_textConsole.m_currentLine -= 10;
+			ScrollDown(1);
+			return 0;
+		}
+		
+		static int PageUpCtrlHandler(int x, int keycode)
+		{
+			ScrollUp(20);
+			return 0;
+		}
+		
+		static int PageDownCtrlHandler(int x, int keycode)
+		{
+			ScrollDown(20);
+			return 0;
+		}
+		
+		static void ScrollUp(int lines)
+		{
+			s_textConsole.m_currentLine += lines;
+			
+			if(s_textConsole.m_currentLine >= s_textConsole.m_paragraphContainer.TotalLines)
+				s_textConsole.m_currentLine = s_textConsole.m_paragraphContainer.TotalLines - 1;
+			
+			s_textConsole.Redraw();
+		}
+		
+		static void ScrollDown(int lines)
+		{
+			s_textConsole.m_currentLine -= lines;
 			
 			if(s_textConsole.m_currentLine < 0)
 				s_textConsole.m_currentLine = 0;
 
 			s_textConsole.Redraw();
-			
-			return 0;
 		}
 
 		public void ReadChars()
@@ -261,14 +283,59 @@ namespace BatMud.BatClientText
 				Console.Write(m_statusLine);
 			}
 		}
-		
+
 		void RedrawOutputLines()
 		{
 			if(m_paragraphContainer.Count == 0)
 				return;
+
+			int p = m_paragraphContainer.Count - 1;
+			int l = 0;
 			
-			TermInfo.SaveCursor();
-			TermInfo.SetScrollRegion(0, m_outputLines + 1);
+			/* find the bottom paragraph */
+			while(p > 0 && l < m_currentLine)
+			{
+				l += m_paragraphContainer[p].m_lines;
+				p--;
+			}
+			
+			int bottomPara = p;		// bottom full para
+			int bottomLines = l - m_currentLine;	// lines shown of the bottom partial para
+			
+			Dbg.WriteLine("Bottom paragraph {0}, lines {1}", bottomPara, bottomLines);
+			
+			l = bottomLines;
+			
+			/* find the top paragraph */
+			while(p >= 0 && l < m_outputLines)
+			{
+				l += m_paragraphContainer[p].m_lines;
+				p--;
+			}
+			
+			p++;
+			
+			int topPara = p;	// top full or partial para
+			int topLines = 0;	// lines hidden of the top partial para
+			int emptyLines = 0;
+			
+			if(l - m_outputLines < 0)
+				emptyLines = Math.Abs(l - m_outputLines);
+			else
+				topLines = l - m_outputLines;
+
+			Dbg.WriteLine("Top paragraph {0}, lines {1}, emptyLines {2}", topPara, topLines, emptyLines);
+			
+			RedrawOutputLines2();
+		}
+		
+		void RedrawOutputLines2()
+		{
+			if(m_paragraphContainer.Count == 0)
+				return;
+			
+			//TermInfo.SaveCursor();
+			//TermInfo.SetScrollRegion(0, m_outputLines + 1);
 
 			int l = 0;
 			int p = m_paragraphContainer.Count - 1;
@@ -281,9 +348,11 @@ namespace BatMud.BatClientText
 				l += m_paragraphContainer[p].m_lines;
 			}
 			
-			Dbg.WriteLine("bottom para {0}", p);
+			//Dbg.WriteLine("bottom para {0}, lines {1}", p, l - m_currentLine);
+			
+			int linesLastPara = l - m_currentLine;
 
-			l = 0;
+			l = linesLastPara;
 			
 			for(; p >= 0; p--)
 			{
@@ -293,12 +362,12 @@ namespace BatMud.BatClientText
 					break;
 			}
 			
-			Dbg.WriteLine("top p {0}, total l {1}", p, l);
+			//Dbg.WriteLine("top p {0}, total l {1}", p, l);
 			
 			if(p < 0)
 				p = 0;
 
-			Dbg.WriteLine("upmost paragraph {0}", p);
+			//Dbg.WriteLine("upmost paragraph {0}", p);
 			
 			l = m_outputLines - l;
 
@@ -308,7 +377,7 @@ namespace BatMud.BatClientText
 				int start = Math.Abs(l) * m_columns;
 				Paragraph para = m_paragraphContainer[p];
 				string str = para.ToAnsiString(m_256colors, start, para.m_text.Length - start);
-				Dbg.WriteLine("topmost ({1},{2}) '{0}'", str, start, para.m_text.Length - start);
+				//Dbg.WriteLine("topmost ({1},{2}) '{0}'", str, start, para.m_text.Length - start);
 
 				TermInfo.MoveCursor(0, 0);
 				Console.Write(str);
@@ -319,7 +388,7 @@ namespace BatMud.BatClientText
 			}
 			
 			
-			Dbg.WriteLine("starting to draw from line {0}, para {1}", l, p);
+			//Dbg.WriteLine("starting to draw from line {0}, para {1}", l, p);
 			
 			for(; p <= m_paragraphContainer.Count - 1; p++)
 			{
@@ -333,7 +402,8 @@ namespace BatMud.BatClientText
 					break;
 			}
 
-			SetInputMode();
+			//TermInfo.SetScrollRegion(m_lines - m_editLines, m_lines);
+			//TermInfo.RestoreCursor();
 		}
 		
 		
@@ -399,28 +469,20 @@ namespace BatMud.BatClientText
 			s_textConsole.m_textQueue.Enqueue(str);
 		}
 
-		void SetOutputMode()
-		{
-			TermInfo.SaveCursor();
-			TermInfo.SetScrollRegion(0, m_lines - m_editLines - 2);
-			TermInfo.MoveCursor(m_lines - m_editLines - 2, 0);
-		}
-
-		void SetInputMode()
-		{
-			TermInfo.SetScrollRegion(m_lines - m_editLines, m_lines);
-			TermInfo.RestoreCursor();
-		}
-		
 		void OutputLine(string str)
 		{
 			if(m_visualMode)
 			{
-				SetOutputMode();
+				TermInfo.SaveCursor();
+				TermInfo.SetScrollRegion(0, m_lines - m_editLines - 2);
+				TermInfo.MoveCursor(m_lines - m_editLines - 2, 0);
+				
 				// Move to next line (and possibly scroll the screen)
 				Console.WriteLine();
 				Console.Write(str);
-				SetInputMode();
+				
+				TermInfo.SetScrollRegion(m_lines - m_editLines, m_lines);
+				TermInfo.RestoreCursor();
 			}
 			else
 			{
