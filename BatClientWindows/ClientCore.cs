@@ -315,7 +315,7 @@ namespace BatMud.BatClientWindows
 				m_receiveEventSent = false;
 			}
 
-			BatConsole.WriteLineLow("Got {0} lines", arr.Length);
+			//BatConsole.WriteLineLow("Got {0} lines", arr.Length);
 			foreach (string s in arr)
 			{
 				ReceiveEvent(s);
