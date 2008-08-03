@@ -2,7 +2,6 @@ using System;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
-using System.Drawing;
 using BatMud.BatClientBase;
 
 namespace BatMud.BatClientWindows
@@ -14,11 +13,9 @@ namespace BatMud.BatClientWindows
 		public MetaData[] m_meta;
 		public int m_lines; // how many lines this paragraphs takes with current number of columns
 		
-#if asd
 		static Regex s_linkRegexp = new Regex(@"((ftp|http|https|mailto|news|nntp|telnet|file)://" +
 			@"(([A-Za-z0-9$_.+!*(),;/?:@&~=-])|%[A-Fa-f0-9]{2}){2,}(#([a-zA-Z0-9][a-zA-Z0-9$_.+!*(),;/?:@&~=%-]*))?([A-Za-z0-9$_+!*();/?:~-]))",
 			 RegexOptions.Compiled);
-#endif
 
 		public class MetaData
 		{
@@ -83,14 +80,13 @@ namespace BatMud.BatClientWindows
 		{
 			m_text = msg.Text;
 			m_meta = new MetaData[msg.GetMetaDataArray().Length];
-			for (int i = 0; i < msg.GetMetaDataArray().Length; i++)
-			{
-				m_meta[i] = new MetaData(msg.GetMetaDataArray()[i]);
-			}
+			ColorMessage.MetaData[] marray = msg.GetMetaDataArray();
+			for (int i = 0; i < marray.Length; i++)
+				m_meta[i] = new MetaData(marray[i]);
 
 			// look for links. this is not really the best place for this...
 			// TODO: breaks if there are color changes in the link
-#if disabled
+
 			MatchCollection matches = s_linkRegexp.Matches(m_text);
 
 			if (matches.Count > 0)
@@ -99,8 +95,8 @@ namespace BatMud.BatClientWindows
 
 				foreach (Match match in matches)
 				{
-					Color currentTextColor = Color.FromArgb(160, 160, 160);
-					Color currentBackgroundColor = Color.Black;
+					System.Drawing.Color currentTextColor = System.Drawing.Color.FromArgb(160, 160, 160);
+					System.Drawing.Color currentBackgroundColor = System.Drawing.Color.Black;
 
 					int matchIdx = match.Index;
 					int matchLen = match.Length;
@@ -109,12 +105,12 @@ namespace BatMud.BatClientWindows
 
 					while (i < metaDataList.Count && metaDataList[i].m_index <= matchIdx)
 					{
-						if (metaDataList[i].m_fgColor != Color.Empty)
+						if (metaDataList[i].m_fgColor != System.Drawing.Color.Empty)
 						{
 							currentTextColor = metaDataList[i].m_fgColor;
 						}
 
-						if (metaDataList[i].m_bgColor != Color.Empty)
+						if (metaDataList[i].m_bgColor != System.Drawing.Color.Empty)
 						{
 							currentBackgroundColor = metaDataList[i].m_bgColor;
 						}
@@ -136,7 +132,6 @@ namespace BatMud.BatClientWindows
 
 				m_meta = metaDataList.ToArray();
 			}
-#endif
 		}
 
 		public override string ToString()
