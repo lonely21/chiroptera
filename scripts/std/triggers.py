@@ -2,6 +2,7 @@
 
 import BatMud.BatClientBase
 import triggers
+from batcore import *
 from batclient import *
 
 def listcmd(input):

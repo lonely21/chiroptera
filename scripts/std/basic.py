@@ -1,4 +1,4 @@
-
+from batcore import *
 from batclient import *
 
 def echocmd(input):
@@ -31,4 +31,11 @@ def connectcmd(input):
 	return 0
 
 addcommand("connect", connectcmd, "Connect to MUD", "usage: /connect [host [port]]\n\nConnected to a MUD. Defaults to batmud.bat.org.")
+
+def promptcmd(input):
+	Console.Prompt = input
+	return 0
+
+addcommand("prompt", promptcmd, "Connect to MUD", "usage: /connect [host [port]]\n\nConnected to a MUD. Defaults to batmud.bat.org.")
+
 

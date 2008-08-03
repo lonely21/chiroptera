@@ -111,7 +111,6 @@ namespace BatMud.BatClientText
 				BatConsole.WriteError("Error running init_std.bc", e);
 			}
 			
-			
 /*
 			m_pythonEngine.Import("site");
 

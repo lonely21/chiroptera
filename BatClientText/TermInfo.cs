@@ -22,7 +22,6 @@ namespace BatMud.BatClientText.Term
 		[DllImport("libncurses", CallingConvention = CallingConvention.Cdecl)]
 			extern static IntPtr tparm(string cap, int p1, int p2);
 		
-		
 		static bool m_initialized = false;
 		static bool s_fullScreen;
 		

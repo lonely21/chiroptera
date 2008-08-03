@@ -22,7 +22,7 @@ namespace BatMud.BatClientText.Term
 		public extern static int write_history(string filename);
 		
 		[DllImport("libreadline", CallingConvention = CallingConvention.Cdecl)]
-		public extern static void add_history(string str);
+		public extern static void add_history(IntPtr str);
 
 		[DllImport("libreadline", CallingConvention = CallingConvention.Cdecl)]
 		public extern static void history_set_pos(int pos);
@@ -36,7 +36,7 @@ namespace BatMud.BatClientText.Term
 		/* readline */
 
 		[DllImport("libreadline", CallingConvention = CallingConvention.Cdecl)]
-		public extern static int rl_set_prompt(string str);
+		public extern static int rl_set_prompt(byte[] str);
 		
 		[DllImport("libreadline", CallingConvention = CallingConvention.Cdecl)]
 		public extern static void rl_redisplay();
@@ -45,7 +45,7 @@ namespace BatMud.BatClientText.Term
 		public extern static void rl_forced_update_display();
 
 		[DllImport("libreadline", CallingConvention = CallingConvention.Cdecl)]
-		public extern static void rl_callback_handler_install(string prompt, LineHandlerDelegate handler);
+		public extern static void rl_callback_handler_install(byte[] prompt, LineHandlerDelegate handler);
 
 		[DllImport("libreadline", CallingConvention = CallingConvention.Cdecl)]
 		public extern static void rl_callback_handler_remove();
@@ -110,6 +110,6 @@ namespace BatMud.BatClientText.Term
 		public extern static IntPtr mono_rl_get_line();
 
 		[DllImport("libbatclient", CallingConvention = CallingConvention.Cdecl)]
-		public extern static void mono_rl_set_line(string str);
+		public extern static void mono_rl_set_line(byte[] str);
 	}
 }

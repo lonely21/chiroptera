@@ -2,18 +2,9 @@
 
 import BatMud.BatClientBase
 import System.Drawing
+from batcore import *
 
 __all__ = ('colorize', 'send', 'write', 'isconnected', 'receive', 'isdebug', 'run', 'addcommand', 'removecommand', 'getopts',)
-
-# Global helper variables
-
-Bat = BatMud.BatClientBase.PythonInterface
-Net = Bat.Network
-Console = Bat.Console
-CmdMgr = Bat.CommandManager
-KeyMgr = Bat.KeyManager
-HiliteMgr = Bat.HiliteManager
-TriggerMgr = Bat.TriggerManager
 
 def colorize(str, fg, bg=None):
 	C = BatMud.BatClientBase.Color

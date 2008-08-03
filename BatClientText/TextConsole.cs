@@ -31,6 +31,9 @@ namespace BatMud.BatClientText
 		
 		Queue<string> m_textQueue = new Queue<string>();
 		
+		System.IO.Stream m_outputStream;
+		static Encoding m_inputEncoding;
+		
 		static TextConsole s_textConsole;
 		
 		void D(string format, params object[] args)
@@ -49,6 +52,11 @@ namespace BatMud.BatClientText
 			
 			if(s_textConsole != null)
 				throw new Exception("Cannot create a new TextConsole");
+			
+			m_outputStream = Console.OpenStandardOutput();
+			
+			//m_inputEncoding = Encoding.GetEncoding("ISO-8859-1");
+			m_inputEncoding = Encoding.GetEncoding("UTF-8");
 			
 			s_textConsole = this;
 			
@@ -75,7 +83,7 @@ namespace BatMud.BatClientText
 			
 			Redraw();
 
-			GNUReadLine.rl_callback_handler_install("", InputHandler);
+			GNUReadLine.rl_callback_handler_install(new byte[] { 0 }, InputHandler);
 
 			Load();
 
@@ -415,13 +423,7 @@ namespace BatMud.BatClientText
 				GNUReadLine.history_set_pos(l);
 				
 				IntPtr strptr = GNUReadLine.mono_history_get(l);
-				int i = 0;
-				while(System.Runtime.InteropServices.Marshal.ReadByte(strptr, i) != (byte)0)
-					++i;
-				byte[] buf = new byte [i];
-				System.Runtime.InteropServices.Marshal.Copy(strptr, buf, 0, buf.Length);
-				string str = System.Text.Encoding.Default.GetString (buf);
-				
+				string str = IntPtrToString(strptr);
 				m_lastLine = str;
 				Dbg.WriteLine("lastline was '{0}'", str);
 			}
@@ -432,34 +434,39 @@ namespace BatMud.BatClientText
 			GNUReadLine.write_history(System.IO.Path.Combine(Program.ConfigPath, "history"));
 		}
 		
-		static void InputHandler(IntPtr strptr)
+
+		static string IntPtrToString(IntPtr strptr)
 		{
-			//Dbg.WriteLine("Native {0}", strptr);
-
-			//Encoding m_encoding = Encoding.GetEncoding("ISO-8859-1");
-
-			string str; 
-			
-			//str = System.Runtime.InteropServices.Marshal.PtrToStringAnsi(nstr);
-
-			// count # bytes
 			int i = 0;
 			while(System.Runtime.InteropServices.Marshal.ReadByte(strptr, i) != (byte)0)
 				++i;
-			//Dbg.WriteLine("{0} bytes", i);
+			
 			byte[] buf = new byte [i];
 			System.Runtime.InteropServices.Marshal.Copy(strptr, buf, 0, buf.Length);
-			str = System.Text.Encoding.Default.GetString (buf);
-			//str = m_encoding.GetString(buf);
+			string str = m_inputEncoding.GetString(buf);
+			return str;
+		}
+		
+		static byte[] StringToByteArray(string str)
+		{
+			byte[] buf = m_inputEncoding.GetBytes(str);
+			byte[] buf2 = new byte[buf.Length + 1];
+			buf.CopyTo(buf2, 0);
+			buf2[buf2.Length-1] = 0;
+			return buf2;
+		}
+		
+		static void InputHandler(IntPtr strptr)
+		{
+			string str = IntPtrToString(strptr);
 
-
-			//Dbg.WriteLine("Tuli: '{0}'", str == null ? "<null>" : str);
+			Dbg.WriteLine("Tuli: '{0}'", str == null ? "<null>" : str);
 
 			if(str == null)
 				return;
 
 			if(str.Length > 0 && str != s_textConsole.m_lastLine)
-				GNUReadLine.add_history(str);
+				GNUReadLine.add_history(strptr);
 			else
 				Dbg.WriteLine("skipping {0}", str);
 
@@ -477,8 +484,9 @@ namespace BatMud.BatClientText
 				TermInfo.MoveCursor(m_lines - m_editLines - 2, 0);
 				
 				// Move to next line (and possibly scroll the screen)
-				Console.WriteLine();
-				Console.Write(str);
+				m_outputStream.WriteByte((byte)'\n');
+				byte[] arr = StringToByteArray(str);
+				m_outputStream.Write(arr, 0, arr.Length);
 				
 				TermInfo.SetScrollRegion(m_lines - m_editLines, m_lines);
 				TermInfo.RestoreCursor();
@@ -487,7 +495,9 @@ namespace BatMud.BatClientText
 			{
 				GNUReadLine.mono_rl_save_and_clear();
 
-				Console.WriteLine(str);
+				byte[] arr = StringToByteArray(str);
+				m_outputStream.Write(arr, 0, arr.Length);
+				m_outputStream.WriteByte((byte)'\n');
 				
 				GNUReadLine.rl_on_new_line();
 				GNUReadLine.mono_rl_restore();
@@ -552,7 +562,7 @@ namespace BatMud.BatClientText
 			set
 			{
 				m_prompt = value;
-				GNUReadLine.rl_set_prompt(value);
+				GNUReadLine.rl_set_prompt(StringToByteArray(value));
 				GNUReadLine.rl_redisplay();
 			}
 		}
@@ -562,20 +572,13 @@ namespace BatMud.BatClientText
 			get 
 			{
 				IntPtr strptr = GNUReadLine.mono_rl_get_line();
-				// count # bytes
-				int i = 0;
-				while(System.Runtime.InteropServices.Marshal.ReadByte(strptr, i) != (byte)0)
-					++i;
-				byte[] buf = new byte [i];
-				System.Runtime.InteropServices.Marshal.Copy(strptr, buf, 0, buf.Length);
-				string str = System.Text.Encoding.Default.GetString (buf);
-				//str = m_encoding.GetString(buf);
+				string str = IntPtrToString(strptr);
 				return str;
 			}
 			
 			set
 			{
-				GNUReadLine.mono_rl_set_line(value);
+				GNUReadLine.mono_rl_set_line(StringToByteArray(value));
 				GNUReadLine.rl_redisplay();
 			}
 		}
