@@ -138,6 +138,7 @@ namespace BatMud.BatClientWindows
 
 			this.SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.Opaque, true);
 			this.SetStyle(ControlStyles.ResizeRedraw, true);
+			this.SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
 			this.UpdateStyles();
 		}
 
@@ -348,7 +349,7 @@ namespace BatMud.BatClientWindows
 
 			PaintBuffer();
 
-			m_buffer.Render();
+			m_buffer.Render(e.Graphics);
 
 			DrawSelection(e.Graphics);
 		}
@@ -710,7 +711,7 @@ namespace BatMud.BatClientWindows
 					r.Y = line1 * m_charHeight;
 					r.Width = this.ClientSize.Width - scrollBar.Width;
 					r.Height = m_charHeight;
-
+					
 					if (line1 >= 0)
 					{
 						BltInvert(g, column1 * m_charWidth, line1 * m_charHeight,
@@ -719,6 +720,7 @@ namespace BatMud.BatClientWindows
 
 					if (line1 + 1 < line2)
 					{
+						
 						BltInvert(g, 0, Math.Max(line1 + 1, 0) * m_charHeight,
 							m_columns * m_charWidth, (Math.Min((line2 - line1 - 1), m_lines)) * m_charHeight);
 					}
@@ -784,7 +786,11 @@ namespace BatMud.BatClientWindows
 			int iw = (int)(w + 0.5);
 			int ih = (int)(h + 0.5);
 
-			g.CopyFromScreen(ix, iy, ix, iy, new Size(iw, ih), CopyPixelOperation.DestinationInvert);
+			IntPtr handle = g.GetHdc();
+			BitBlt(handle, ix, iy, iw, ih, handle, ix, iy, TernaryRasterOperations.DSTINVERT);
+			g.ReleaseHdc();
+
+			//g.CopyFromScreen(ix, iy, ix, iy, new Size(iw, ih), CopyPixelOperation.DestinationInvert);
 		}
 
 		protected override void OnMouseDown(MouseEventArgs e)
