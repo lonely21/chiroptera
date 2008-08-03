@@ -32,7 +32,7 @@ namespace BatMud.BatClientText
 		int GetLinesForParagraph(Paragraph paragraph)
 		{
 			int l = paragraph.m_text.Length / m_columns;
-			if(paragraph.m_text.Length % m_columns == 0)
+			if (paragraph.m_text.Length > 0 && paragraph.m_text.Length % m_columns == 0)
 				l -= 1;
 			l += 1;
 			return l;

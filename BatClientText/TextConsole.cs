@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using BatMud.BatClientBase;
-using Mono.Unix.Native;
 using BatMud.BatClientText.Term;
 
 namespace BatMud.BatClientText

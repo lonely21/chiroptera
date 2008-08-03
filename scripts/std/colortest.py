@@ -13,6 +13,14 @@ write("joo" + colorize("blueonyellow", "blue", "yellow") + "pajoo")
 
 write("nomoi")
 
+receive("")
+
 write("foo " + colorize("orange", "orange") + " pajoo " + colorize("red", "red") + " plim")
 
 write("jep")
+
+receive("\x1b[34;1m`---------\x1b[0m\x1b[37;1mv\x1b[0m\x1b[34;1m---------\x1b[0m\x1b[37;1m>\x1b[0m\x1b[34;1m\x1b[0m")
+
+receive("\x1b[34;1m`---------\x1b[0m\x1b[37;1mv\x1b[0m")
+
+receive("none\x1b[32mgreen\x1b[1mgreen_bold\x1b[45mgreen_bold_on_purple\x1b[33myellow_bold_on_purple\x1b[0mnone")

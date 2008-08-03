@@ -120,23 +120,12 @@ namespace BatMud.BatClientWindows
 				BatConsole.WriteError("Error running init.bc", e);
 			}
 
-			CheckClientVersion();
-			/*
-			m_hiliteManager.AddHilite(new Hilite("1tomba", true, Color.Red, Color.Empty, false));
-			m_hiliteManager.AddHilite(new Hilite("2durand", true, Color.Blue, Color.Red, true));
-			m_hiliteManager.AddHilite(new Hilite("3tomba", true, Color.Red, Color.Empty, false));
-			m_hiliteManager.AddHilite(new Hilite("4durand", true, Color.Blue, Color.Red, true));
-			m_hiliteManager.AddHilite(new Hilite("5tomba", true, Color.Red, Color.Empty, false));
-			m_hiliteManager.AddHilite(new Hilite("6durand", true, Color.Blue, Color.Red, true));
-			m_hiliteManager.AddHilite(new Hilite("7tomba", true, Color.Red, Color.Empty, false));
-			m_hiliteManager.AddHilite(new Hilite("8durand", true, Color.Blue, Color.Red, true));
-			m_triggerManager.AddTrigger(new ScriptedTrigger("1palapala", false, TriggerType.Replace, "koo1kaa"));
-			m_triggerManager.AddTrigger(new ScriptedTrigger("2palapala", false, TriggerType.Send, "koo2kaa"));
-			m_triggerManager.AddTrigger(new ScriptedTrigger("3palapala", false, TriggerType.Script, "koo3kaa"));
-			m_keyManager.AddBinding(new KeyBinding(Keys.Tab, delegate(object data) { BatConsole.WriteLine("kala"); return false; }, null));
-			 */
-			//new TriggerForm().ShowDialog(MainWindow);
+			Version currentVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+			Version baseVersion = System.Reflection.Assembly.GetAssembly(typeof(Telnet)).GetName().Version;
+			BatConsole.WriteLine("BatClientText version {0} (base {1})", currentVersion, baseVersion);
+			BatConsole.WriteLine("Using {0}", PythonEngine.VersionString);
 
+			CheckClientVersion();
 		}
 
 		public void Uninitialize()
@@ -294,13 +283,44 @@ namespace BatMud.BatClientWindows
 			m_mainWindow.PromptTextBox.PromptPassword = false;
 		}
 
+		Queue<string> m_receiveQueue = new Queue<string>();
+		bool m_receiveEventSent = false;
+
+		delegate void ReceiveEventDelegate();
+
 		// Transfers control to MainForm's thread
 		void _ReceiveEvent(string data)
 		{
-			m_mainWindow.BeginInvoke(new Telnet.ReceiveDelegate(ReceiveEvent), new object[] { data });
+			lock (m_receiveQueue)
+			{
+				m_receiveQueue.Enqueue(data);
+				if (m_receiveEventSent == false)
+				{
+					m_receiveEventSent = true;
+					m_mainWindow.BeginInvoke(new ReceiveEventDelegate(ReceiveEventBulk), null);
+				}
+			}
 		}
 
 		TextStyle m_currentStyle = new TextStyle();
+
+		void ReceiveEventBulk()
+		{
+			string[] arr;
+
+			lock (m_receiveQueue)
+			{
+				arr = m_receiveQueue.ToArray();
+				m_receiveQueue.Clear();
+				m_receiveEventSent = false;
+			}
+
+			//BatConsole.WriteLineLow("Got {0} lines", arr.Length);
+			foreach (string s in arr)
+			{
+				ReceiveEvent(s);
+			}
+		}
 
 		void ReceiveEvent(string data)
 		{
@@ -396,6 +416,13 @@ namespace BatMud.BatClientWindows
 					EvalCommandHandler(input);
 					return;
 				}
+			}
+
+			if (input.Length > 1 && input.StartsWith("\\"))
+			{
+				input = input.Substring(1);
+				EvalCommandHandler(input);
+				return;
 			}
 
 			input = m_baseServicesDispatcher.DispatchInputEvent(input);

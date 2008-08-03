@@ -227,9 +227,7 @@ namespace BatMud.BatClientBase
 						string str = m_stringBuilder.ToString();
 
 						if(receiveEvent != null)
-						{
 							receiveEvent(str);
-						}
 
 						m_stringBuilder = new StringBuilder();
 
@@ -246,9 +244,7 @@ namespace BatMud.BatClientBase
 						string str = m_stringBuilder.ToString();
 
 						if(receiveEvent != null)
-						{
 							receiveEvent(str);
-						}
 
 						m_stringBuilder = new StringBuilder();
 

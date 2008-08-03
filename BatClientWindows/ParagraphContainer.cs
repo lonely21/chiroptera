@@ -11,7 +11,7 @@ namespace BatMud.BatClientWindows
 		public delegate void ParagraphAddedDelegate(bool historyFull);
 		public event ParagraphAddedDelegate paragraphAddedEvent = null;
 
-		int m_columns = 80;
+		int m_columns = 0;
 
 		public ParagraphContainer()
 		{
@@ -30,7 +30,7 @@ namespace BatMud.BatClientWindows
 		int GetLinesForParagraph(Paragraph paragraph)
 		{
 			int l = paragraph.m_text.Length / m_columns;
-			if(paragraph.m_text.Length % m_columns == 0)
+			if(paragraph.m_text.Length > 0 && paragraph.m_text.Length % m_columns == 0)
 				l -= 1;
 			l += 1;
 			return l;

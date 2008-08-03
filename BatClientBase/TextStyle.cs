@@ -7,8 +7,7 @@ namespace BatMud.BatClientBase
 	[Flags]
 	public enum TextStyleFlags
 	{
-		Empty = 0,		// No flags, doesn't change the text
-		None = 1<<0,		// No flags, resets the text to defaults
+		Empty = 0,
 		HighIntensity = 1<<1,
 		Inverse = 1<<2
 	}
@@ -78,7 +77,7 @@ namespace BatMud.BatClientBase
 		
 		public static TextStyle CreateDefaultStyle()
 		{
-			return new TextStyle(Color.Default, Color.Default, TextStyleFlags.None);
+			return new TextStyle(Color.Default, Color.Default, TextStyleFlags.Empty);
 		}
 	}
 }
