@@ -1057,7 +1057,7 @@ namespace BatMud.BatClientWindows
 
 				string originalString = paragraph.m_text;
 
-				int totalLines = originalString.Length / (m_columns + 1) + 1;
+				int totalLines = paragraph.m_lines;
 
 				linesCounted += totalLines;
 

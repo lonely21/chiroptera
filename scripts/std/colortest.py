@@ -13,6 +13,8 @@ write("joo" + colorize("blueonyellow", "blue", "yellow") + "pajoo")
 
 write("nomoi")
 
+receive("")
+
 write("foo " + colorize("orange", "orange") + " pajoo " + colorize("red", "red") + " plim")
 
 write("jep")
