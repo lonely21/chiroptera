@@ -56,24 +56,29 @@ namespace BatMud.BatClientWindows
 		{
 			textEntered(base.Text);
 
-			if (base.Text.Length > 0)
+			if (base.Text.Length == 0)
+				return;
+
+			if (base.PasswordChar != (char)0)
 			{
-				if ((m_stringList.Count < 2 || m_stringList[m_stringList.Count - 2] != base.Text) &&
-					base.PasswordChar == (char)0)
-				{
-					m_stringList[m_stringList.Count - 1] = base.Text;
-					m_stringList.Add("");
-
-					if (m_stringList.Count > m_maxSize)
-					{
-						m_stringList.RemoveAt(0);
-					}
-
-					m_historyPos = m_stringList.Count - 1;
-				}
-
+				m_historyPos = m_stringList.Count - 1;
 				base.Clear();
+				return;
 			}
+
+			if (m_stringList.Count < 2 || m_stringList[m_stringList.Count - 2] != base.Text)
+			{
+				m_stringList[m_stringList.Count - 1] = base.Text;
+				m_stringList.Add("");
+
+				if (m_stringList.Count > m_maxSize)
+				{
+					m_stringList.RemoveAt(0);
+				}
+			}
+
+			m_historyPos = m_stringList.Count - 1;
+			base.Clear();
 		}
 
 		protected override void OnKeyDown(KeyEventArgs e)
