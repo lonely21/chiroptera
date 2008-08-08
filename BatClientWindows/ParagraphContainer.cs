@@ -73,6 +73,9 @@ namespace BatMud.BatClientWindows
 
 		public void SetColumns(int columns)
 		{
+			if (columns == 0)
+				columns = 80; // when minimized
+
 			m_columns = columns;
 
 			for(int i = 0; i < m_paragraphList.Count; i++)
