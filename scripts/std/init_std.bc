@@ -1,5 +1,5 @@
 # import these, so that trigger scripts can use them
-/eval from batclient import *
+/eval from chiroptera import *
 
 /run basic
 /run triggers

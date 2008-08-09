@@ -8,7 +8,7 @@
 /receive Tomba arrives from east.
 
 /echo Replace test
-/trigger -p 0 -f -n test2 -m replace "^(\w*) attacks you!$" -> *** %{batclient.colorize(%0.upper(), "red")} ***
+/trigger -p 0 -f -n test2 -m replace "^(\w*) attacks you!$" -> *** %{chiroptera.colorize(%0.upper(), "red")} ***
 /receive Tomba attacks you!
 
 /echo Send test

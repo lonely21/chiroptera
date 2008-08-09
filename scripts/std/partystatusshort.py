@@ -2,7 +2,7 @@
 
 print "running partystatusshort.py"
 
-from batclient import *
+from chiroptera import *
 from triggers import *
 
 handling_pss = False

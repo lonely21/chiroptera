@@ -1,5 +1,5 @@
-from batcore import *
-from batclient import *
+from chicore import *
+from chiroptera import *
 
 def echocmd(input):
 	write(input)

@@ -1,5 +1,5 @@
 
-from batclient import *
+from chiroptera import *
 
 print "running colortest.py"
 

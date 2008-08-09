@@ -1,0 +1,94 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+	<head>
+		<title></title>
+		<meta name="vs_snapToGrid" content="False">
+		<meta name="vs_showGrid" content="True">
+		<meta name="GENERATOR" content="Microsoft Visual Studio .NET 7.1">
+		<meta name="ProgId" content="VisualStudio.HTML">
+		<meta name="Originator" content="Microsoft Visual Studio .NET 7.1">
+	</head>
+	<body>
+		<H1>Quick Help to Chiroptera Client</H1>
+		<H2>Keyboard shortcuts</H2>
+		<P>PageUp / PageDown - Scroll the screen one page up/down</P>
+		<P>Ctrl-ArrowUp / Ctrl-ArrowDown - Scroll the screen one line up/down</P>
+		<P>ArrowUp / ArrowDown - Previous / next line in command line history</P>
+		<P>Shift-ArrowUp / Shift-ArrowDown - Search command line history using the text in 
+			the input line</P>
+		<P>LeftMouse + Drag - Select text on the screen and copy it to clipboard</P>
+		<P>RightMouse - Paste text from clipboard</P>
+		<H2>
+            Built-in Commands</H2>
+        <p>
+            /help [command] - display all commands, or help on the given command</p>
+        <p>
+            /quit - quit the client</p>
+        <p>
+            /eval &lt;python code&gt; - evaluate python code</p>
+        <p>
+            /run &lt;script&gt; - run script file</p>
+        <p>
+            /py - enter/exit python mode</p>
+        <h2>
+            Commands implemented in python modules</h2>
+        <p>
+            /list - list all triggers (triggers.py)</p><p>
+                /trigger- define a new trigger (triggers.py)</p>
+        <p>
+            /delete - delete a trigger (triggers.py)</p>
+        <p>
+            /hilite - hilite a pattern (hilite.py)</p>
+        <p>
+            /bind - bind a key to an action (bind.py)</p>
+        <br />
+        Use /help and /help &lt;command&gt; to learn more about commands.<h2>
+            Scripting</h2>
+		<P>The script engine is IronPython (<a href="http://www.codeplex.com/IronPython">http://www.codeplex.com/IronPython</a>)
+            which is a python implementation on .NET.</P>
+        <h3>
+            Modules</h3>
+        <p>
+            Modules, scripts that are not meant to be ran as such, but are imported and used
+            in other scripts, reside in <strong>lib</strong> directory. The modules are:</p>
+        <ul>
+            <li>batclient.py - helper functions for batclient</li>
+            <li>triggers.py - python functions for triggers</li>
+        </ul>
+        <h3>
+            Scripts</h3>
+        <p>
+            Scripts that come with Chiroptera reside in std directory and user made scripts reside
+            in &lt;user's documents dir&gt;/Chiroptera directory. They can be ran, for example,
+            with /run command.</p>
+        <h3>
+            Command scripts</h3>
+        <p>
+            Script files with .bc file extension are Chiroptera command scripts. When you run
+            one of these files, each line is executed as if you had given a command in the client.</p>
+        <p>
+            When the client starts it runs <strong>init_std.bc</strong> script from std directory,
+            which contains standard client initialization stuff. After that the client runs
+            <strong>init.bc</strong> from &lt;user's documents&gt;/Chiroptera directory, and that's where you can put your
+            initialization stuff.</p>
+        <h3>
+            Substitutions</h3>
+        <p>
+            Triggers and key bindings can contain substitution arguments.
+        </p>
+        <ul>
+            <li>%{<em><strong>expression</strong></em>} - <strong><em>expression</em></strong> is
+                a python expression which is evaluated and the result is substituted
+                in place of %{...}. For example %{"kissa" + "kala"}</li>
+            <li>%%{<strong><em>statements</em></strong>} - <strong><em>statements</em></strong>
+                is a list of python statements. The statements are
+                executed and the returned value is substituted in place of %%{...}. For example
+                %%{i = 1; i = i + 2; return i;}</li><li>%<strong><em>&lt;n&gt;</em></strong> - n'th matched regexp group, or 
+                the whole match
+                    if n is zero. n can be from 0 to 9.</li>
+            <li>%L or %R - The rest of the line left of the match, or right of the match.</li>
+        </ul>
+        <p>
+        </p>
+	</body>
+</html>

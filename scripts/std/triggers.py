@@ -1,9 +1,9 @@
 #print "running triggers script"
 
-import BatMud.BatClientBase
+import Chiroptera.Base
 import triggers
-from batcore import *
-from batclient import *
+from chicore import *
+from chiroptera import *
 
 def listcmd(input):
 	def usage():
@@ -20,7 +20,7 @@ def listcmd(input):
 		usage()
 		return -1
 
-	trigs = BatMud.BatClientBase.PythonInterface.TriggerManager.Triggers
+	trigs = Chiroptera.Base.PythonInterface.TriggerManager.Triggers
 	write("Defined triggers:")
 	for t in trigs:
 		flags = ""
@@ -133,19 +133,19 @@ def triggercmd(input):
 		if opt.Key == "i":
 			ignorecase = True
 
-	tm = BatMud.BatClientBase.PythonInterface.TriggerManager
+	tm = Chiroptera.Base.PythonInterface.TriggerManager
 
 	if mode == "send":
-		type = BatMud.BatClientBase.TriggerType.Send
+		type = Chiroptera.Base.TriggerType.Send
 	elif mode == "replace":
-		type = BatMud.BatClientBase.TriggerType.Replace
+		type = Chiroptera.Base.TriggerType.Replace
 	elif mode == "script":
-		type = BatMud.BatClientBase.TriggerType.Script
+		type = Chiroptera.Base.TriggerType.Script
 	else:
 		print "Unknown mode " + mode
 		return -1
 		
-	t = BatMud.BatClientBase.ScriptedTrigger(pattern, ignorecase, type, action)
+	t = Chiroptera.Base.ScriptedTrigger(pattern, ignorecase, type, action)
 	
 	tm.AddTrigger(t)
 	
@@ -178,6 +178,6 @@ When a trigger fires its action is evaluated and the following replacements are 
 Examples
 --------
 /trigger -p 0 -f -n scripttest -m script "(\w*) arrives from (\w*)" -> print "player: '%s' arrives from direction: '%s'" % (%1.upper(), %2)
-/trigger -f -n replacetest -m replace "^(\w*) attacks you!$" -> *** %{batclient.colorize(%0.upper(), "red")} ***
+/trigger -f -n replacetest -m replace "^(\w*) attacks you!$" -> *** %{chiroptera.colorize(%0.upper(), "red")} ***
 /trigger -f -n sendtest -m send "(\w*) is dead, RIP" -> dig grave
 """)

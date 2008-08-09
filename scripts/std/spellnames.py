@@ -2,7 +2,7 @@
 
 print "running spellnames.py"
 
-from batclient import *
+from chiroptera import *
 from triggers import *
 
 spells = (

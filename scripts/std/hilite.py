@@ -1,6 +1,6 @@
-import BatMud.BatClientBase
-from batcore import *
-from batclient import *
+import Chiroptera.Base
+from chicore import *
+from chiroptera import *
 
 def hiliteaction(msg, match, data):
 	fg = data[0]
@@ -9,7 +9,7 @@ def hiliteaction(msg, match, data):
 		msg.SetText(colorize(msg.Text, fg))
 	else:
 		while match.Success:
-			msg.Colorize(match.Index, match.Length, fg, BatMud.BatClientBase.Color.Empty)
+			msg.Colorize(match.Index, match.Length, fg, Chiroptera.Base.Color.Empty)
 			match = match.NextMatch()
 
 def hilitecmd(input):
@@ -27,7 +27,7 @@ def hilitecmd(input):
 		usage()
 		return -1
 	
-	C = BatMud.BatClientBase.Color
+	C = Chiroptera.Base.Color
 	color = C.Empty
 	bgcolor = C.Empty
 	fullline = False
@@ -55,10 +55,10 @@ def hilitecmd(input):
 			ignorecase = True
 
 	if color.IsEmpty and bgcolor.IsEmpty:
-		style = BatMud.BatClientBase.TextStyle(BatMud.BatClientBase.TextStyleFlags.HighIntensity)
-		hilite = BatMud.BatClientBase.Hilite(args[0], ignorecase, style, fullline)
+		style = Chiroptera.Base.TextStyle(Chiroptera.Base.TextStyleFlags.HighIntensity)
+		hilite = Chiroptera.Base.Hilite(args[0], ignorecase, style, fullline)
 	else:
-		hilite = BatMud.BatClientBase.Hilite(args[0], ignorecase, color, bgcolor, fullline)
+		hilite = Chiroptera.Base.Hilite(args[0], ignorecase, color, bgcolor, fullline)
 	HiliteMgr.AddHilite(hilite)
 	return 0
 	
@@ -74,8 +74,8 @@ Hilites pattern with specified color. Options:
 """)
 
 testmode = 0
-if testmode and BatMud.BatClientBase.PythonInterface.IsDebug():
-	from batclient import *
+if testmode and Chiroptera.Base.PythonInterface.IsDebug():
+	from chiroptera import *
 
 	#write("\x1b[38;5;41mkala\x1b[0mkissa")
 	receive("jee")

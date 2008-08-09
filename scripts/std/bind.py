@@ -1,5 +1,5 @@
-import BatMud.BatClientBase
-from batclient import *
+import Chiroptera.Base
+from chiroptera import *
 
 def bindcmd(input):
 	def usage():
@@ -55,15 +55,15 @@ def bindcmd(input):
 		key |= System.Windows.Forms.Keys.Alt
 		
 	if mode == "send":
-		type = BatMud.BatClientBase.KeyBindingType.Send
+		type = Chiroptera.Base.KeyBindingType.Send
 	elif mode == "script":
-		type = BatMud.BatClientBase.KeyBindingType.Script
+		type = Chiroptera.Base.KeyBindingType.Script
 	else:
 		print "Unknown mode " + mode
 		return -1
 		
 	KeyMgr.RemoveBinding(key)
-	binding = BatMud.BatClientBase.ScriptedKeyBinding(key, type, action, False)
+	binding = Chiroptera.Base.ScriptedKeyBinding(key, type, action, False)
 	KeyMgr.AddBinding(binding)
 
 	return 0

@@ -1,4 +1,4 @@
-import BatMud.BatClientBase
+import Chiroptera.Base
 
 def addtrigger(regex, action, triggername=None, triggergroup=None, userdata=None, priority=0, fallthrough=False, gag=False, ignorecase=False):
 	"""Add a new trigger.
@@ -8,7 +8,7 @@ regex - Regular expression for matching the trigger.
 action - Function to be called when the trigger goes off OR code to be 
          run as string.
          actionfunc(msg, match, userdata)
-             msg - BatMud.BatClientBase.ColorMessage
+             msg - Chiroptera.Base.ColorMessage
              match - System.Text.RegularExpressions.Match
                      http://msdn2.microsoft.com/en-us/library/system.text.regularexpressions.match.aspx
              userdata - object
@@ -19,8 +19,8 @@ userdata - Data to be passed to the action function. Default None.
 fallthrough - If True, continue searching matching triggers after this
               one. Default False.
 """
-	t = BatMud.BatClientBase.Trigger(regex, action, userdata, triggername, triggergroup, priority, fallthrough, gag, ignorecase)
-	BatMud.BatClientBase.PythonInterface.TriggerManager.AddTrigger(t)
+	t = Chiroptera.Base.Trigger(regex, action, userdata, triggername, triggergroup, priority, fallthrough, gag, ignorecase)
+	Chiroptera.Base.PythonInterface.TriggerManager.AddTrigger(t)
 
 def gettrigger(arg):
 	"""Returns Trigger instance.
@@ -29,9 +29,9 @@ def gettrigger(arg):
 	"""
 	
 	if isinstance(arg, int):
-		return BatMud.BatClientBase.PythonInterface.TriggerManager.GetTrigger(arg)
+		return Chiroptera.Base.PythonInterface.TriggerManager.GetTrigger(arg)
 	elif isinstance(arg, str):
-		return BatMud.BatClientBase.PythonInterface.TriggerManager.GetTrigger(arg)
+		return Chiroptera.Base.PythonInterface.TriggerManager.GetTrigger(arg)
 	else:
 		return None
 
@@ -43,10 +43,10 @@ def removetrigger(arg):
 	
 	t = None
 	if isinstance(arg, int):
-		t = BatMud.BatClientBase.PythonInterface.TriggerManager.GetTrigger(arg)
+		t = Chiroptera.Base.PythonInterface.TriggerManager.GetTrigger(arg)
 	elif isinstance(arg, str):
-		t = BatMud.BatClientBase.PythonInterface.TriggerManager.GetTrigger(arg)
-	elif isinstance(arg, BatMud.BatClientBase.Trigger):
+		t = Chiroptera.Base.PythonInterface.TriggerManager.GetTrigger(arg)
+	elif isinstance(arg, Chiroptera.Base.Trigger):
 		t = arg
 	else:
 		return False
@@ -54,9 +54,9 @@ def removetrigger(arg):
 	if t == None:
 		return False
 		
-	return BatMud.BatClientBase.PythonInterface.TriggerManager.RemoveTrigger(t)	
+	return Chiroptera.Base.PythonInterface.TriggerManager.RemoveTrigger(t)	
 
 def removetriggergroup(groupname):
-	BatMud.BatClientBase.PythonInterface.TriggerManager.RemoveTriggerGroup(groupname)
+	Chiroptera.Base.PythonInterface.TriggerManager.RemoveTriggerGroup(groupname)
 
 
