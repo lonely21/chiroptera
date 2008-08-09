@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace BatMud.BatClientText
+namespace Chiroptera.Lin
 {
 	static class Program
 	{

@@ -1,9 +1,9 @@
 using System;
 using System.Runtime.InteropServices;
-using BatMud.BatClientBase;
+using Chiroptera.Base;
 using System.Diagnostics;
 
-namespace BatMud.BatClientText.Term
+namespace Chiroptera.Lin.Term
 {
 	public static class TermInfo
 	{
@@ -113,7 +113,7 @@ namespace BatMud.BatClientText.Term
 			D("GetSize");
 			if(GNUReadLine.mono_rl_get_window_size(out width, out height) == false)
 			{
-				BatConsole.WriteLine("Failed to get win size");
+				ChiConsole.WriteLine("Failed to get win size");
 				return false;
 			}
 			else

@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Threading;
-using BatMud.BatClientBase;
+using Chiroptera.Base;
 using IronPython.Hosting;
 using IronPython.Runtime;
 using Mono.Unix;
 using Mono.Unix.Native;
 
-namespace BatMud.BatClientText
+namespace Chiroptera.Lin
 {
 	public class ClientCore : INetwork
 	{
@@ -47,13 +47,13 @@ namespace BatMud.BatClientText
 
 			// Init console
 			m_textConsole = new TextConsole();
-			BatConsole.SetBatConsole(m_textConsole);
+			ChiConsole.SetChiConsole(m_textConsole);
 			
 			// Initialize ironpython
 			IronPython.Compiler.Options.GenerateModulesAsSnippets = true;
 			m_pythonEngine = new PythonEngine();
 
-			BatPythonStream s = new BatPythonStream();
+			ChiPythonStream s = new ChiPythonStream();
 			m_pythonEngine.SetStandardOutput(s);
 			m_pythonEngine.SetStandardError(s);
 			m_pythonEngine.SetStandardInput(s);
@@ -95,8 +95,8 @@ namespace BatMud.BatClientText
 
 			Version currentVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
 			Version baseVersion = System.Reflection.Assembly.GetAssembly(typeof(Telnet)).GetName().Version;
-			BatConsole.WriteLine("BatClientText version {0} (base {1})", currentVersion, baseVersion);
-			BatConsole.WriteLine("Using {0}", PythonEngine.VersionString);
+			ChiConsole.WriteLine("BatClientText version {0} (base {1})", currentVersion, baseVersion);
+			ChiConsole.WriteLine("Using {0}", PythonEngine.VersionString);
 						
 			try
 			{
@@ -108,7 +108,7 @@ namespace BatMud.BatClientText
 			}
 			catch (Exception e)
 			{
-				BatConsole.WriteError("Error running init_std.bc", e);
+				ChiConsole.WriteError("Error running init_std.bc", e);
 			}
 			
 /*
@@ -120,7 +120,7 @@ namespace BatMud.BatClientText
 			}
 			catch (Exception e)
 			{
-				BatConsole.WriteError("Eval failed", e);
+				ChiConsole.WriteError("Eval failed", e);
 			}
 			*/
 		}
@@ -232,8 +232,8 @@ namespace BatMud.BatClientText
 
 				if(ret == 0)
 				{
-					//BatConsole.Prompt = String.Format("pr{0}> ", z++);
-					BatConsole.WriteLine("timeout");
+					//ChiConsole.Prompt = String.Format("pr{0}> ", z++);
+					ChiConsole.WriteLine("timeout");
 				}
 				else if(ret > 0)
 				{
@@ -306,11 +306,11 @@ namespace BatMud.BatClientText
 					m_telnet.Send(String.Format("\x1b<v{0}>\n", typeof(ClientCore).Assembly.GetName().Version));
 				}
 
-				BatConsole.WriteLine("Connected to {0}:{1}", address, port);
+				ChiConsole.WriteLine("Connected to {0}:{1}", address, port);
 			}
 			else
 			{
-				BatConsole.WriteLine("Connect failed to {0}:{1} : {2}", address, port, exception.Message);
+				ChiConsole.WriteLine("Connect failed to {0}:{1} : {2}", address, port, exception.Message);
 			}
 		}
 
@@ -325,9 +325,9 @@ namespace BatMud.BatClientText
 		{
 			m_baseServicesDispatcher.DispatchDisconnectEvent();
 
-			BatConsole.WriteLine("Disconnected from {0}:{1}", address, port);
+			ChiConsole.WriteLine("Disconnected from {0}:{1}", address, port);
 
-			BatConsole.Prompt = "";
+			ChiConsole.Prompt = "";
 			//m_mainWindow.PromptTextBox.PromptPassword = false;
 		}
 
@@ -346,7 +346,7 @@ namespace BatMud.BatClientText
 			foreach(string str in strs)
 			{
 				if(m_debugReceive)
-					BatConsole.WriteLineLow("rcv: " + str.Replace("\x1b", "<esc>"));
+					ChiConsole.WriteLineLow("rcv: " + str.Replace("\x1b", "<esc>"));
 				
 				ColorMessage colorMsg = Ansi.ParseAnsi(str, ref m_currentStyle);
 				
@@ -355,7 +355,7 @@ namespace BatMud.BatClientText
 				if (colorMsg == null)
 					return;
 				
-				BatConsole.WriteLine(colorMsg);
+				ChiConsole.WriteLine(colorMsg);
 			}
 		}
 
@@ -376,7 +376,7 @@ namespace BatMud.BatClientText
 				return;
 
 			if(!m_pythonMode)
-				BatConsole.Prompt = colorMsg.Text;
+				ChiConsole.Prompt = colorMsg.Text;
 		}
 
 		// Transfers control to main thread
@@ -407,13 +407,13 @@ namespace BatMud.BatClientText
 
 				if (m_pythonMode)
 				{
-					BatConsole.WriteLine("Python mode enabled. Use /py to exit python mode.");
-					BatConsole.Prompt = "python> ";
+					ChiConsole.WriteLine("Python mode enabled. Use /py to exit python mode.");
+					ChiConsole.Prompt = "python> ";
 				}
 				else
 				{
-					BatConsole.WriteLine("Python mode disabled.");
-					BatConsole.Prompt = "";
+					ChiConsole.WriteLine("Python mode disabled.");
+					ChiConsole.Prompt = "";
 				}
 				return;
 			}
@@ -434,10 +434,10 @@ namespace BatMud.BatClientText
 			if (m_telnet.IsConnected)
 			{
 				SendLine(input);
-				BatConsole.Prompt = "";
+				ChiConsole.Prompt = "";
 			}
 			else
-				BatConsole.WriteLine("Not connected.");
+				ChiConsole.WriteLine("Not connected.");
 		}
 
 		int QuitCommandHandler(string input)
@@ -462,7 +462,7 @@ namespace BatMud.BatClientText
 			}
 			catch (Exception e)
 			{
-				BatConsole.WriteError("eval failed", e);
+				ChiConsole.WriteError("eval failed", e);
 			}
 
 			return 0;

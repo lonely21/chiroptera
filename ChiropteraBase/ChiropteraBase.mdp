@@ -1,13 +1,13 @@
-<Project name="BatClientBase" fileversion="2.0" language="C#" clr-version="Net_2_0" ctype="DotNetProject">
+<Project name="ChiropteraBase" fileversion="2.0" language="C#" clr-version="Net_2_0" ctype="DotNetProject">
   <Configurations active="Debug">
     <Configuration name="Debug" ctype="DotNetProjectConfiguration">
-      <Output directory="bin/Debug" assemblyKeyFile="." assembly="BatClientBase" />
+      <Output directory="bin/Debug" assemblyKeyFile="." assembly="ChiropteraBase" />
       <Build debugmode="True" target="Library" />
       <Execution runwithwarnings="True" consolepause="True" runtime="MsNet" clr-version="Net_2_0" />
       <CodeGeneration compiler="Mcs" warninglevel="4" optimize="True" unsafecodeallowed="False" generateoverflowchecks="True" definesymbols="DEBUG" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
     </Configuration>
     <Configuration name="Release" ctype="DotNetProjectConfiguration">
-      <Output directory="bin/Release" assembly="BatClientBase" />
+      <Output directory="bin/Release" assemblyKeyFile="." assembly="ChiropteraBase" />
       <Build debugmode="False" target="Library" />
       <Execution runwithwarnings="True" consolepause="True" runtime="MsNet" clr-version="Net_2_0" />
       <CodeGeneration compiler="Mcs" warninglevel="4" optimize="True" unsafecodeallowed="False" generateoverflowchecks="True" generatexmldocumentation="False" ctype="CSharpCompilerParameters" />
@@ -16,8 +16,6 @@
   <Contents>
     <File name="Ansi.cs" subtype="Code" buildaction="Compile" />
     <File name="BaseServicesDispatcher.cs" subtype="Code" buildaction="Compile" />
-    <File name="BatConsole.cs" subtype="Code" buildaction="Compile" />
-    <File name="BatPythonStream.cs" subtype="Code" buildaction="Compile" />
     <File name="ClientSocket.cs" subtype="Code" buildaction="Compile" />
     <File name="Collections.cs" subtype="Code" buildaction="Compile" />
     <File name="ColorMessage.cs" subtype="Code" buildaction="Compile" />
@@ -30,7 +28,9 @@
     <File name="TriggerManager.cs" subtype="Code" buildaction="Compile" />
     <File name="Color.cs" subtype="Code" buildaction="Compile" />
     <File name="TextStyle.cs" subtype="Code" buildaction="Compile" />
-    <File name="AssemblyInfo.cs" subtype="Code" buildaction="Compile" />
+    <File name="ChiConsole.cs" subtype="Code" buildaction="Compile" />
+    <File name="ChiPythonStream.cs" subtype="Code" buildaction="Compile" />
+    <File name="Properties/AssemblyInfo.cs" subtype="Code" buildaction="Compile" />
   </Contents>
   <References>
     <ProjectReference type="Gac" localcopy="True" refto="System.Xml, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />

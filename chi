@@ -1,0 +1,6 @@
+#!/bin/bash
+
+cd ChiropteraLin/bin/Debug
+
+exec -a "Chiroptera" /usr/bin/mono --debug ./Chiroptera.exe "$@"
+

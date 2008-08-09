@@ -2,12 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using BatMud.BatClientBase;
-using BatMud.BatClientText.Term;
+using Chiroptera.Base;
+using Chiroptera.Lin.Term;
 
-namespace BatMud.BatClientText
+namespace Chiroptera.Lin
 {
-	class TextConsole : IBatConsole
+	class TextConsole : IChiConsole
 	{
 		bool m_256colors = true;
 		ParagraphContainer m_paragraphContainer;
@@ -504,7 +504,7 @@ namespace BatMud.BatClientText
 			}
 		}
 		
-		#region IBatConsole Members
+		#region IChiConsole Members
 		
 		public void WriteLine(string str)
 		{

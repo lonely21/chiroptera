@@ -1,9 +1,9 @@
 using System;
 using System.Text;
 using System.Collections.Generic;
-using BatMud.BatClientBase;
+using Chiroptera.Base;
 
-namespace BatMud.BatClientText
+namespace Chiroptera.Lin
 {
 	// non-editable paragraph
 	public class Paragraph

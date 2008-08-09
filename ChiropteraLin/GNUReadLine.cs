@@ -2,7 +2,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
 
-namespace BatMud.BatClientText.Term
+namespace Chiroptera.Lin.Term
 {
 	public static class GNUReadLine
 	{
@@ -27,10 +27,10 @@ namespace BatMud.BatClientText.Term
 		[DllImport("libreadline", CallingConvention = CallingConvention.Cdecl)]
 		public extern static void history_set_pos(int pos);
 		
-		[DllImport("libbatclient", CallingConvention = CallingConvention.Cdecl)]
+		[DllImport("libchiroptera", CallingConvention = CallingConvention.Cdecl)]
 		public extern static int mono_history_get_length();
 
-		[DllImport("libbatclient", CallingConvention = CallingConvention.Cdecl)]
+		[DllImport("libchiroptera", CallingConvention = CallingConvention.Cdecl)]
 		public extern static IntPtr mono_history_get(int offset);
 			
 		/* readline */
@@ -94,22 +94,22 @@ namespace BatMud.BatClientText.Term
 		[DllImport("libreadline", CallingConvention = CallingConvention.Cdecl)]
 		public extern static void rl_prep_terminal(int meta);
 		
-		[DllImport("libbatclient", CallingConvention = CallingConvention.Cdecl)]
+		[DllImport("libchiroptera", CallingConvention = CallingConvention.Cdecl)]
 		public extern static void mono_rl_set_catch_signals(bool enable);
 		
-		[DllImport("libbatclient", CallingConvention = CallingConvention.Cdecl)]
+		[DllImport("libchiroptera", CallingConvention = CallingConvention.Cdecl)]
 		public extern static bool mono_rl_get_window_size(out int width, out int height);
 
-		[DllImport("libbatclient", CallingConvention = CallingConvention.Cdecl)]
+		[DllImport("libchiroptera", CallingConvention = CallingConvention.Cdecl)]
 		public extern static void mono_rl_save_and_clear();
 
-		[DllImport("libbatclient", CallingConvention = CallingConvention.Cdecl)]
+		[DllImport("libchiroptera", CallingConvention = CallingConvention.Cdecl)]
 		public extern static void mono_rl_restore();
 
-		[DllImport("libbatclient", CallingConvention = CallingConvention.Cdecl)]
+		[DllImport("libchiroptera", CallingConvention = CallingConvention.Cdecl)]
 		public extern static IntPtr mono_rl_get_line();
 
-		[DllImport("libbatclient", CallingConvention = CallingConvention.Cdecl)]
+		[DllImport("libchiroptera", CallingConvention = CallingConvention.Cdecl)]
 		public extern static void mono_rl_set_line(byte[] str);
 	}
 }

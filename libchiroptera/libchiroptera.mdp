@@ -1,11 +1,11 @@
-<Project name="libbatclient" fileversion="2.0" language="C" ctype="CProject">
+<Project name="libchiroptera" fileversion="2.0" language="C" ctype="CProject">
   <Configurations active="Debug">
     <Configuration name="Debug" SourceDirectory="." ctype="CProjectConfiguration">
       <CustomCommands>
-        <Command type="AfterBuild" command="cp -fu bin/Debug/libbatclient.so ../BatClientText/bin/Debug/" />
-        <Command type="AfterClean" command="rm -f ../BatClientText/bin/Debug/libbatclient.so" />
+        <Command type="AfterBuild" command="cp -fu bin/Debug/libchiroptera.so ../ChiropteraLin/bin/Debug/" />
+        <Command type="AfterClean" command="rm -f ../ChiropteraLin/bin/Debug/llibchiroptera.so" />
       </CustomCommands>
-      <Output directory="bin/Debug" output="libbatclient" />
+      <Output directory="bin/Debug" output="libchiroptera" />
       <Build debugmode="True" target="SharedLibrary" />
       <Execution runwithwarnings="True" consolepause="True" />
       <Libs>
@@ -14,7 +14,7 @@
       <CodeGeneration WarningLevel="Normal" WarningsAsErrors="False" OptimizationLevel="0" ExtraCompilerArguments="" ExtraLinkerArguments="" DefineSymbols="DEBUG MONODEVELOP" ctype="CCompilationParameters" />
     </Configuration>
     <Configuration name="Release" ctype="CProjectConfiguration">
-      <Output directory="bin/Release" output="libbatclient" />
+      <Output directory="bin/Release" output="libchiroptera" />
       <Build debugmode="False" target="SharedLibrary" />
       <Execution runwithwarnings="True" consolepause="True" />
       <CodeGeneration WarningLevel="Normal" WarningsAsErrors="False" OptimizationLevel="3" ExtraCompilerArguments="" ExtraLinkerArguments="" DefineSymbols="MONODEVELOP" ctype="CCompilationParameters" />

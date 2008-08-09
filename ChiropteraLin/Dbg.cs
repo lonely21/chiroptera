@@ -6,7 +6,7 @@
 
 using System;
 
-namespace BatMud.BatClientText
+namespace Chiroptera.Lin
 {
 	public static class Dbg
 	{
