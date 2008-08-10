@@ -36,6 +36,7 @@ using System.Drawing;
       35	Magenta
       36	Cyan
       37	White
+      38;5;c	256 color
       39	Default
 
       	Background Colours
@@ -47,38 +48,60 @@ using System.Drawing;
       45	Magenta
       46	Cyan
       47	White
+      48;5;c	256 color
       49	Default
 */
 
 
 namespace Chiroptera.Base
 {
+	public struct AnsiTextStyle
+	{
+		public int Fg;
+		public int Bg;
+		public bool IsBold;
+		public bool IsInverse;
+
+		public static readonly AnsiTextStyle Empty;
+		
+		static AnsiTextStyle()
+		{
+			Empty = new AnsiTextStyle();
+			Empty.Fg = -1;
+			Empty.Bg = -1;
+			Empty.IsBold = false;
+			Empty.IsInverse = false;
+		}
+		
+		public bool IsEmpty
+		{
+			get { return Fg == -1 && Bg == -1 && IsBold == false && IsInverse == false; }
+		}
+		
+		public TextStyle ToTextStyle()
+		{
+			int fgNum = Fg;
+			if(IsBold && fgNum < 8)
+				fgNum += 8;
+			Color fg = Ansi.AnsiColor256ToColor(fgNum);
+			Color bg = Ansi.AnsiColor256ToColor(Bg);
+			TextStyleFlags flags = TextStyleFlags.Empty;
+			if(IsBold)
+				flags |= TextStyleFlags.HighIntensity;
+			if(IsInverse)
+				flags |= TextStyleFlags.Inverse;
+			return new TextStyle(fg, bg, flags);
+		}
+		
+		public bool IsSame(AnsiTextStyle style)
+		{
+			return Fg == style.Fg && Bg == style.Bg && IsBold == style.IsBold && IsInverse == style.IsInverse;
+		}
+	}
+		
 	public class Ansi
 	{
 		const char ESC = '\x1b';
-
-		public enum AnsiColor
-		{
-			None    = -1,
-			Black   = 0,
-			Red     = 1,
-			Green   = 2,
-			Yellow  = 3,
-			Blue    = 4,
-			Purple  = 5,
-			Cyan    = 6,
-			White   = 7,
-			Default	= 9
-		}
-
-		[Flags]
-		public enum AnsiStyle
-		{
-			None = 0,
-			Default = 1<<0,
-			HighIntensity = 1<<1,
-			Inverse = 1<<2
-		}
 
 		static Color[] m_ansiColorArray = new Color[] { 
 			Color.FromArgb(0, 0, 0),
@@ -107,7 +130,8 @@ namespace Chiroptera.Base
 				s_colorTable[c, 0] = (byte)color.R;
 				s_colorTable[c, 1] = (byte)color.G;
 				s_colorTable[c, 2] = (byte)color.B;
-				//ChiConsole.WriteLineLow("{0}: {1}", c, color);
+				//if(c < 16)
+				//	ChiConsole.WriteLineLow("{0}: {1}", c, color);
 			}
 		}
 		
@@ -182,8 +206,11 @@ namespace Chiroptera.Base
 		 * colors 232-255 are a grayscale ramp, intentionally leaving out black and white
 		 */
 
-		static Color AnsiColor256ToColor(int color)
+		public static Color AnsiColor256ToColor(int color)
 		{
+			if(color == -1)
+				return Color.Empty;
+			
 			Color c;
 			
 			if(color < 16)
@@ -215,15 +242,20 @@ namespace Chiroptera.Base
 			return c;
 		}
 
-		public static int ColorToAnsiColor256(Color color)
+		public static int ColorToAnsiColor256(Color color, bool isHi)
 		{
 			int c, best_match=0;
 			double d, smallest_distance;
 
 			smallest_distance = 10000000000.0;
 
-			//for(c = 16; c < 256; c++)
-			for(c = 0; c < 256; c++)
+			// hack. for hilites, try to find basic system color
+			if(isHi)
+				c = 0;
+			else
+				c = 16;
+			
+			for(; c < 256; c++)
 			{
 				d = Math.Pow(s_colorTable[c,0] - color.R, 2.0) + 
 					Math.Pow(s_colorTable[c,1] - color.G, 2.0) + 
@@ -244,7 +276,7 @@ namespace Chiroptera.Base
 			if(color.IsDefault)
 				return String.Format("\x1b[{0}m", isBg ? 49 : 39);
 
-			int c = ColorToAnsiColor256(color);
+			int c = ColorToAnsiColor256(color, isHi);
 			return String.Format("\x1b[{0};5;{1}m", isBg ? 48 : 38, c);
 		}
 
@@ -263,27 +295,19 @@ namespace Chiroptera.Base
 			return sb.ToString();
 		}
 		
-		public static ColorMessage ParseAnsi(string text, ref TextStyle currentStyle)
+		public static ColorMessage ParseAnsi(string text, ref AnsiTextStyle currentStyle)
 		{
 			StringBuilder stringBuilder = new StringBuilder(text.Length);
 			List<ColorMessage.MetaData> metaData = new List<ColorMessage.MetaData>();
 
 			int pos = 0;
 			int oldPos = 0;
-
-			Color fgColor = currentStyle.Fg;
-			Color bgColor = currentStyle.Bg;
-			TextStyleFlags flags = currentStyle.Flags;
-
-			Color previousFgColor = fgColor;
-			Color previousBgColor = bgColor;
-			TextStyleFlags previousFlags = flags;
 			
-			if(!currentStyle.Fg.IsEmpty ||
-			   !currentStyle.Bg.IsEmpty ||
-			   currentStyle.Flags != TextStyleFlags.Empty)
+			AnsiTextStyle previousStyle = currentStyle;
+			
+			if(!currentStyle.IsEmpty)
 			{
-				ColorMessage.MetaData md = new ColorMessage.MetaData(stringBuilder.Length, currentStyle);
+				ColorMessage.MetaData md = new ColorMessage.MetaData(stringBuilder.Length, currentStyle.ToTextStyle());
 				metaData.Add(md);
 			}
 
@@ -358,17 +382,17 @@ namespace Chiroptera.Base
 							switch (num)
 							{
 								case 0:		// normal
-									fgColor = Color.Default;
-									bgColor = Color.Default;
-									flags = TextStyleFlags.Empty;
+									currentStyle.Fg = -1;
+									currentStyle.Bg = -1;
+									currentStyle.IsBold = false;
+									currentStyle.IsInverse = false;
 									break;
 								case 1:		// bold
-									flags |= TextStyleFlags.HighIntensity;
-									xxx hilite the current color
+									currentStyle.IsBold = true;
 									break;
 
 								case 7:			// inverse
-									flags |= TextStyleFlags.Inverse;
+									currentStyle.IsInverse = true;
 									break;
 
 								case 30:
@@ -379,11 +403,9 @@ namespace Chiroptera.Base
 								case 35:
 								case 36:
 								case 37:
-									//fgColor = AnsiColor8ToColor(num - 30, false);
-									fgColor = AnsiColor8ToColor(num - 30, (flags & TextStyleFlags.HighIntensity) != 0);
+									currentStyle.Fg = num - 30;
 									break;
 								
-									// 38;5;c
 								case 38:
 									if(arr.Length != 3 || i != 0 || arr[1] != "5")
 									{
@@ -391,14 +413,14 @@ namespace Chiroptera.Base
 										break;
 									}
 									
-									fgColor = AnsiColor256ToColor(byte.Parse(arr[2]));
+									currentStyle.Fg = byte.Parse(arr[2]);
 									
 									i += 3;
 									
 									break;
 
 								case 39:		// default color
-									fgColor = Color.Default;
+									currentStyle.Fg = -1;
 									break;
 
 
@@ -410,7 +432,7 @@ namespace Chiroptera.Base
 								case 45:
 								case 46:
 								case 47:
-									bgColor = AnsiColor8ToColor(num - 40, false);
+									currentStyle.Bg = num - 40;
 									break;
 
 								case 48:
@@ -420,14 +442,14 @@ namespace Chiroptera.Base
 										break;
 									}
 									
-									bgColor = AnsiColor256ToColor(byte.Parse(arr[2]));
+									currentStyle.Bg = byte.Parse(arr[2]);
 									
 									i += 3;
 									
 									break;
 									
 								case 49:		// default color
-									bgColor = Color.Default;
+									currentStyle.Bg = -1;
 									break;
 
 								default:
@@ -436,24 +458,13 @@ namespace Chiroptera.Base
 							}
 						}
 
-						if (previousFgColor != fgColor ||
-							previousBgColor != bgColor ||
-							previousFlags != flags)
+						if(!previousStyle.IsSame(currentStyle))
 						{
-							TextStyle style = new TextStyle(fgColor, bgColor, flags);
-							ColorMessage.MetaData md = new ColorMessage.MetaData(stringBuilder.Length, style);
+							ColorMessage.MetaData md = new ColorMessage.MetaData(stringBuilder.Length, currentStyle.ToTextStyle());
 							metaData.Add(md);
 						}
-
-						if (fgColor == Color.Default)
-							fgColor = Color.Empty;
-
-						if (bgColor == Color.Default)
-							bgColor = Color.Empty;
-
-						previousFgColor = fgColor;
-						previousBgColor = bgColor;
-						previousFlags = flags;
+						
+						previousStyle = currentStyle;
 					}
 					else if (text[pos] == 'H')
 					{
@@ -470,15 +481,13 @@ namespace Chiroptera.Base
 				}
 			}
 
-			currentStyle = new TextStyle(fgColor, bgColor, flags);
-
 			return new ColorMessage(stringBuilder.ToString(), metaData);
 		}
 		
 		static public string ColorizeString(string str, Color foreground, Color background)
 		{
-			int fg = ColorToAnsiColor256(foreground);
-			int bg = ColorToAnsiColor256(background);
+			int fg = ColorToAnsiColor256(foreground, false);
+			int bg = ColorToAnsiColor256(background, false);
 			
 			StringBuilder sb = new StringBuilder();
 

@@ -53,7 +53,7 @@ namespace Chiroptera.Base
 			Validate();
 		}
 		
-		public static ColorMessage CreateFromAnsi(string str, TextStyle lastStyle)
+		public static ColorMessage CreateFromAnsi(string str, AnsiTextStyle lastStyle)
 		{
 			ColorMessage colorMsg = Ansi.ParseAnsi(str, ref lastStyle);
 			return colorMsg;

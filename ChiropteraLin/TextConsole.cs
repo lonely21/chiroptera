@@ -11,7 +11,7 @@ namespace Chiroptera.Lin
 	{
 		bool m_256colors = true;
 		ParagraphContainer m_paragraphContainer;
-		bool m_showOutputDebug = true;
+		bool m_showOutputDebug = false;
 		bool m_escapeOutput = false;
 
 		string m_prompt = "";
@@ -510,7 +510,7 @@ namespace Chiroptera.Lin
 		public void WriteLine(string str)
 		{
 			string[] lines = str.Split(new string[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
-			TextStyle style = new TextStyle();
+			AnsiTextStyle style = AnsiTextStyle.Empty;
 			foreach (string line in lines)
 			{
 				ColorMessage msg = ColorMessage.CreateFromAnsi(line, style);
@@ -549,7 +549,7 @@ namespace Chiroptera.Lin
 			string str = String.Format(format, args);
 
 			string[] lines = str.Split(new string[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
-			TextStyle style = new TextStyle();
+			AnsiTextStyle style = AnsiTextStyle.Empty;
 			foreach (string line in lines)
 			{
 				ColorMessage msg = ColorMessage.CreateFromAnsi(line, style);

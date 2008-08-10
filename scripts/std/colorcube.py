@@ -4,6 +4,18 @@ from chiroptera import *
 def create256():
 	s = ""
 
+	# first the conventional system ones:
+	s += "Conventional system colors:\n"
+	for color in range(8):
+		s += "\x1b[%dm%d " % (color + 30, color)
+
+	s += "\x1b[0m\n"
+	
+	for color in range(8):
+		s += "\x1b[1;%dm%d " % (color + 30, color)
+	
+	s += "\x1b[0m\n"
+
 	# first the system ones:
 	s += "System colors:\n"
 	for color in range(8):

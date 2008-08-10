@@ -337,7 +337,7 @@ namespace Chiroptera.Lin
 			m_synchronizedInvoke.BeginInvoke(new Telnet.ReceiveDelegate(ReceiveEvent), new object[] { data });
 		}
 
-		TextStyle m_currentStyle = new TextStyle();
+		AnsiTextStyle m_currentStyle = AnsiTextStyle.Empty;
 		
 		void ReceiveEvent(string data)
 		{
@@ -367,7 +367,7 @@ namespace Chiroptera.Lin
 
 		void PromptEvent(string data)
 		{
-			TextStyle dummy = new TextStyle();
+			AnsiTextStyle dummy = AnsiTextStyle.Empty;
 			ColorMessage colorMsg = ColorMessage.CreateFromAnsi(data, dummy);
 
 			colorMsg = m_baseServicesDispatcher.DispatchPromptEvent(colorMsg);

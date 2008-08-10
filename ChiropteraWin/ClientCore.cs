@@ -302,7 +302,7 @@ namespace Chiroptera.Win
 			}
 		}
 
-		TextStyle m_currentStyle = new TextStyle();
+		AnsiTextStyle m_currentStyle = AnsiTextStyle.Empty;
 
 		void ReceiveEventBulk()
 		{
@@ -352,7 +352,7 @@ namespace Chiroptera.Win
 
 		void PromptEvent(string data)
 		{
-			TextStyle dummy = new TextStyle();
+			AnsiTextStyle dummy = AnsiTextStyle.Empty;
 			ColorMessage colorMsg = ColorMessage.CreateFromAnsi(data, dummy);
 
 			colorMsg = m_baseServicesDispatcher.DispatchPromptEvent(colorMsg);
@@ -518,7 +518,7 @@ namespace Chiroptera.Win
 		public void WriteLine(string str)
 		{
 			string[] lines = str.Split(new string[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
-			TextStyle style = new TextStyle();
+			AnsiTextStyle style = AnsiTextStyle.Empty;
 			foreach (string line in lines)
 			{
 				ColorMessage msg = ColorMessage.CreateFromAnsi(line, style);
@@ -558,7 +558,7 @@ namespace Chiroptera.Win
 			string str = String.Format(format, args);
 
 			string[] lines = str.Split(new string[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
-			TextStyle style = new TextStyle();
+			AnsiTextStyle style = AnsiTextStyle.Empty;
 			foreach (string line in lines)
 			{
 				ColorMessage msg = ColorMessage.CreateFromAnsi(line, style);

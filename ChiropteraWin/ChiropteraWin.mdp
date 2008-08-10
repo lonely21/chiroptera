@@ -1,4 +1,4 @@
-<Project name="BatClientWindows" fileversion="2.0" language="C#" clr-version="Net_2_0" ctype="DotNetProject">
+<Project name="ChiropteraWin" fileversion="2.0" language="C#" clr-version="Net_2_0" ctype="DotNetProject">
   <Configurations active="Debug">
     <Configuration name="Debug" ctype="DotNetProjectConfiguration">
       <Output directory="bin/Debug" assemblyKeyFile="." assembly="BatClientWindows" />
@@ -18,9 +18,6 @@
     <File name="AboutDialog.Designer.cs" subtype="Code" buildaction="Compile" />
     <File name="AboutDialog.resx" subtype="Code" buildaction="Nothing" />
     <File name="app.config" subtype="Code" buildaction="Nothing" />
-    <File name="Bat.ico" subtype="Code" buildaction="Nothing" />
-    <File name="BatClientWindows.csproj" subtype="Code" buildaction="Nothing" />
-    <File name="BatClientWindows.mdp" subtype="Code" buildaction="Nothing" />
     <File name="ClientCore.cs" subtype="Code" buildaction="Compile" />
     <File name="ErrorDialog.cs" subtype="Code" buildaction="Compile" />
     <File name="ErrorDialog.Designer.cs" subtype="Code" buildaction="Compile" />
@@ -55,7 +52,6 @@
     <File name="TriggerForm.cs" subtype="Code" buildaction="Compile" />
     <File name="TriggerForm.Designer.cs" subtype="Code" buildaction="Compile" />
     <File name="TriggerForm.resx" subtype="Code" buildaction="Nothing" />
-    <File name="WindowsHook.cs" subtype="Code" buildaction="Compile" />
     <File name="Properties/AssemblyInfo.cs" subtype="Code" buildaction="Compile" />
     <File name="Properties/Resources.Designer.cs" subtype="Code" buildaction="Compile" />
     <File name="Properties/Resources.resx" subtype="Code" buildaction="Nothing" />
@@ -69,7 +65,7 @@
     <ProjectReference type="Gac" localcopy="True" refto="System.Data, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
     <ProjectReference type="Assembly" localcopy="True" refto="../IronPython/IronMath.dll" />
     <ProjectReference type="Assembly" localcopy="True" refto="../IronPython/IronPython.dll" />
-    <ProjectReference type="Project" localcopy="True" refto="BatClientBase" />
     <ProjectReference type="Gac" localcopy="True" refto="System.Xml, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+    <ProjectReference type="Project" localcopy="True" refto="ChiropteraBase" />
   </References>
 </Project>

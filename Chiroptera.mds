@@ -1,26 +1,30 @@
-<Combine name="BatClient" fileversion="2.0">
+<Combine name="Chiroptera" fileversion="2.0">
   <Configurations active="Debug">
     <Configuration name="Debug" ctype="CombineConfiguration">
       <Entry build="True" name="ChiropteraBase" configuration="Debug" />
       <Entry build="True" name="libchiroptera" configuration="Debug" />
       <Entry build="True" name="ChiropteraLin" configuration="Debug" />
+      <Entry build="True" name="ChiropteraWin" configuration="Debug" />
     </Configuration>
     <Configuration name="Release" ctype="CombineConfiguration">
       <Entry build="True" name="ChiropteraBase" configuration="Release" />
       <Entry build="True" name="libchiroptera" configuration="Release" />
       <Entry build="True" name="ChiropteraLin" configuration="Release" />
+      <Entry build="True" name="ChiropteraWin" configuration="Release" />
     </Configuration>
   </Configurations>
   <StartMode startupentry="ChiropteraBase" single="True">
     <Execute type="None" entry="ChiropteraBase" />
-    <Execute type="None" entry="BatClientWindows" />
+    <Execute type="None" entry="ChiropteraWin" />
     <Execute type="None" entry="ChiropteraBase" />
     <Execute type="None" entry="libchiroptera" />
     <Execute type="None" entry="ChiropteraLin" />
+    <Execute type="None" entry="ChiropteraWin" />
   </StartMode>
   <Entries>
     <Entry filename="ChiropteraBase/ChiropteraBase.mdp" />
     <Entry filename="libchiroptera/libchiroptera.mdp" />
     <Entry filename="ChiropteraLin/ChiropteraLin.mdp" />
+    <Entry filename="ChiropteraWin/ChiropteraWin.mdp" />
   </Entries>
 </Combine>
