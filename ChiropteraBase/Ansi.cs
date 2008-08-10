@@ -8,12 +8,6 @@ using System.Drawing;
 #endregion
 
 /*
- * TODO: make colormessage editable. ie. msg.Insert("kala", 4), and msg.SetColor(6, Color.Red)
- * TODO: the parsing code sucks. fix.
- * TODO: control codes spanning multiple lines do not work
- */
-
-/*
   Set Attribute Mode	<ESC>[{attr1};...;{attrn}m
 
     * Sets multiple display attribute settings. The following lists standard attributes:
@@ -228,7 +222,8 @@ namespace Chiroptera.Base
 
 			smallest_distance = 10000000000.0;
 
-			for(c = 16; c < 256; c++)
+			//for(c = 16; c < 256; c++)
+			for(c = 0; c < 256; c++)
 			{
 				d = Math.Pow(s_colorTable[c,0] - color.R, 2.0) + 
 					Math.Pow(s_colorTable[c,1] - color.G, 2.0) + 
@@ -243,7 +238,31 @@ namespace Chiroptera.Base
 			
 			return best_match;
 		}
+		
+		public static string ColorToAnsiString256(Color color, bool isBg, bool isHi)
+		{
+			if(color.IsDefault)
+				return String.Format("\x1b[{0}m", isBg ? 49 : 39);
 
+			int c = ColorToAnsiColor256(color);
+			return String.Format("\x1b[{0};5;{1}m", isBg ? 48 : 38, c);
+		}
+
+		public static string ColorToAnsiString8(Color color, bool isBg)
+		{
+			if(color.IsDefault)
+				return String.Format("\x1b[{0}m", isBg ? 49 : 39);
+			
+			bool hi;
+			int c = ColorToAnsiColor8(color, out hi);
+
+			StringBuilder sb = new StringBuilder();
+			if(hi && !isBg)
+				sb.Append("\x1b[1m");
+			sb.AppendFormat("\x1b[{0}m", (isBg ? 40 : 30) + c);
+			return sb.ToString();
+		}
+		
 		public static ColorMessage ParseAnsi(string text, ref TextStyle currentStyle)
 		{
 			StringBuilder stringBuilder = new StringBuilder(text.Length);
@@ -345,6 +364,7 @@ namespace Chiroptera.Base
 									break;
 								case 1:		// bold
 									flags |= TextStyleFlags.HighIntensity;
+									xxx hilite the current color
 									break;
 
 								case 7:			// inverse
@@ -359,7 +379,8 @@ namespace Chiroptera.Base
 								case 35:
 								case 36:
 								case 37:
-									fgColor = Ansi.AnsiColor8ToColor(num - 30, false);
+									//fgColor = AnsiColor8ToColor(num - 30, false);
+									fgColor = AnsiColor8ToColor(num - 30, (flags & TextStyleFlags.HighIntensity) != 0);
 									break;
 								
 									// 38;5;c
@@ -389,7 +410,7 @@ namespace Chiroptera.Base
 								case 45:
 								case 46:
 								case 47:
-									bgColor = Ansi.AnsiColor8ToColor(num - 40, false);
+									bgColor = AnsiColor8ToColor(num - 40, false);
 									break;
 
 								case 48:

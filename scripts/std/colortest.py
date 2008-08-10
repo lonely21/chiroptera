@@ -24,3 +24,6 @@ receive("\x1b[34;1m`---------\x1b[0m\x1b[37;1mv\x1b[0m\x1b[34;1m---------\x1b[0m
 receive("\x1b[34;1m`---------\x1b[0m\x1b[37;1mv\x1b[0m")
 
 receive("none\x1b[32mgreen\x1b[1mgreen_bold\x1b[45mgreen_bold_on_purple\x1b[33myellow_bold_on_purple\x1b[0mnone")
+
+receive("\x1b[34;1m| \x1b[0m\x1b[1;30m#######\x1b[0m\x1b[0;35mG\x1b[0m\x1b[1;30m.....\x1b[0m\x1b[0;35mg\x1b[0m\x1b[1;30m...\x1b[0m\x1b[34;1m |\x1b[0m  once laid. Many people are travelling back and forth and");
+

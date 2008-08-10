@@ -73,7 +73,6 @@ namespace Chiroptera.Base
 			return String.Format("<{0}/{1}/{2}>", m_fgColor, m_bgColor, m_flags);
 			
 		}
-
 		
 		public static TextStyle CreateDefaultStyle()
 		{

@@ -11,7 +11,7 @@ namespace Chiroptera.Lin
 	{
 		bool m_256colors = true;
 		ParagraphContainer m_paragraphContainer;
-		bool m_showOutputDebug = false;
+		bool m_showOutputDebug = true;
 		bool m_escapeOutput = false;
 
 		string m_prompt = "";
@@ -88,10 +88,11 @@ namespace Chiroptera.Lin
 			Load();
 
 			m_initialized = true;
-			
+/*			
 			for(int i = 0; i < 200; i++)
 				m_paragraphContainer.Add(String.Format("kala {0} 1234567890 abcdefg hijklmn opqrstu vxyz 1234567890 abcdefg hijklmn opqrstu vxyz foobar {1}", 
 				                                       i, i));
+				                                       */
 		}
 		
 		void ParagraphAdded(bool historyFull)
