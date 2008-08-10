@@ -4,11 +4,11 @@ using System.Runtime.CompilerServices;
 // Information about this assembly is defined by the following attributes. 
 // Change them to the values specific to your project.
 
-[assembly: AssemblyTitle("BatMUD Client")]
-[assembly: AssemblyDescription("BatMUD Client")]
+[assembly: AssemblyTitle("Chiroptera MUD Client")]
+[assembly: AssemblyDescription("Chiroptera MUD Client")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("BatMUD Client")]
+[assembly: AssemblyProduct("Chiroptera MUD Client")]
 [assembly: AssemblyCopyright("Copyright © 2008 Tomi Valkeinen")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

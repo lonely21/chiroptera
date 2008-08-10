@@ -95,7 +95,7 @@ namespace Chiroptera.Lin
 
 			Version currentVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
 			Version baseVersion = System.Reflection.Assembly.GetAssembly(typeof(Telnet)).GetName().Version;
-			ChiConsole.WriteLine("BatClientText version {0} (base {1})", currentVersion, baseVersion);
+			ChiConsole.WriteLine("Chiroptera version {0} (base {1})", currentVersion.ToString(2), baseVersion.ToString(2));
 			ChiConsole.WriteLine("Using {0}", PythonEngine.VersionString);
 						
 			try
