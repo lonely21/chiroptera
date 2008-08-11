@@ -42,7 +42,7 @@ namespace Chiroptera.Win
 
 		private void m_inputBox_textEntered(string str)
 		{
-			this.Prompt = "";
+			//this.Prompt = "";
 			if (textEntered != null)
     			textEntered(str);
 		}
