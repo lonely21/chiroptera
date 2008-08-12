@@ -49,16 +49,15 @@
 			this.m_inputBox.Location = new System.Drawing.Point(54, 0);
 			this.m_inputBox.Multiline = true;
 			this.m_inputBox.Name = "m_inputBox";
-			this.m_inputBox.Size = new System.Drawing.Size(340, 55);
+			this.m_inputBox.Size = new System.Drawing.Size(344, 136);
 			this.m_inputBox.TabIndex = 0;
 			// 
 			// PromptTextBox
 			// 
-			this.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
 			this.Controls.Add(this.m_inputBox);
 			this.Controls.Add(this.m_promptLabel);
 			this.Name = "PromptTextBox";
-			this.Size = new System.Drawing.Size(394, 55);
+			this.Size = new System.Drawing.Size(398, 136);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 

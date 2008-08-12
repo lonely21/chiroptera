@@ -55,6 +55,7 @@ namespace Chiroptera.Win
 			// 
 			// splitter1
 			// 
+			splitter1.BackColor = System.Drawing.SystemColors.ControlDark;
 			splitter1.Dock = System.Windows.Forms.DockStyle.Bottom;
 			splitter1.Location = new System.Drawing.Point(0, 477);
 			splitter1.Name = "splitter1";
@@ -86,7 +87,7 @@ namespace Chiroptera.Win
 			// quitToolStripMenuItem
 			// 
 			this.quitToolStripMenuItem.Name = "quitToolStripMenuItem";
-			this.quitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.quitToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
 			this.quitToolStripMenuItem.Text = "Exit";
 			this.quitToolStripMenuItem.Click += new System.EventHandler(this.quitToolStripMenuItem_Click);
 			// 
@@ -186,14 +187,14 @@ namespace Chiroptera.Win
 			// quickHelpToolStripMenuItem
 			// 
 			this.quickHelpToolStripMenuItem.Name = "quickHelpToolStripMenuItem";
-			this.quickHelpToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+			this.quickHelpToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
 			this.quickHelpToolStripMenuItem.Text = "Quick Help";
 			this.quickHelpToolStripMenuItem.Click += new System.EventHandler(this.quickHelpToolStripMenuItem_Click);
 			// 
 			// aboutToolStripMenuItem
 			// 
 			this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-			this.aboutToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+			this.aboutToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
 			this.aboutToolStripMenuItem.Text = "About Chiroptera...";
 			this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
 			// 
@@ -219,7 +220,6 @@ namespace Chiroptera.Win
 			// promptTextBox
 			// 
 			this.promptTextBox.BackColor = System.Drawing.SystemColors.Window;
-			this.promptTextBox.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
 			this.promptTextBox.DataBindings.Add(new System.Windows.Forms.Binding("Font", global::Chiroptera.Win.Properties.Settings.Default, "MainFont", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
 			this.promptTextBox.Dock = System.Windows.Forms.DockStyle.Bottom;
 			this.promptTextBox.Font = global::Chiroptera.Win.Properties.Settings.Default.MainFont;
